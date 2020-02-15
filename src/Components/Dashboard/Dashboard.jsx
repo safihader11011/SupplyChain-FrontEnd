@@ -17,7 +17,12 @@ import PersonPinIcon from '@material-ui/icons/PersonPin';
 // import TransporterModal from './common/TranspoterModal'
 // import TransporterTable from './common/TransporterTable'
 // import Availability from './Availability'
-import CreateBlockSupplierModal from './CreateBlockSupplierModal'
+import CreateBlockSupplierModal from './Supplier/CreateBlockSupplierModal'
+import CreateBlockManufacturerModal from './Manufacturer/CreateBlockManufacturerModal'
+import CreateBlockTransporterModal from './Transporter/CreateBlockTransporterModal'
+import CreateBlockRetailerModal from './Retailer/CreateBlockRetailerModal'
+import CreateBlockConsumerModal from './Consumer/CreateBlockConsumerModal'
+ 
 // import {Logout} from '../../Services/Auth-Services'
 // import {GetFleet,GetAvailability,GetShipperInformation} from '../../Services/Transporter-Services'
 // import ShipperInformationTable from '../Dashboard/common/Booking/TransporterBooking'
@@ -64,7 +69,8 @@ const useStyles = makeStyles(theme => ({
     },
     font:{
         fontWeight:200,
-        fontSize:17
+        fontSize:17,
+        color:"white"
     },
     root: {
         flexGrow: 1,
@@ -154,6 +160,8 @@ const Dashboard = (props) => {
         setValue(newValue);
         console.log(newValue)
     };
+
+    const {role}=props.match.params
 
     // const handleLogout=()=>{
     //      setLoading(true);
@@ -253,7 +261,7 @@ const Dashboard = (props) => {
                 <div> */}
                     <Grid container direction="row" xs={12}>
                         <Hidden smDown>
-                            <Grid style={{paddingTop:"5px",minHeight:"100vh",background:"#F1F1F1"}} container direction="column" alignItems="flex-start" justify="flex-start" sm={2}>
+                            <Grid style={{paddingTop:"5px",minHeight:"100vh",background:"#2a2a2a"}} container direction="column" alignItems="flex-start" justify="flex-start" sm={2}>
                                 
                                 {/* <div style={{paddingLeft:35,marginBottom:10}}>
                                     <img className={classes.pic} src={require(`../../Assets/logo final-01.png`)} height="150" width="150"/>
@@ -300,9 +308,18 @@ const Dashboard = (props) => {
                     </Grid>
                 {/* </div>
              }  */}
-            {/* {modal && <TransporterModal setOpen={setModal}/>} */}
-            {modal1 && <CreateBlockSupplierModal cities={cities} setOpen={setModal1}/>}
-            
+            {modal1 && role==='supplier'? <CreateBlockSupplierModal cities={cities} setOpen={setModal1}/>
+                    :
+            modal1 && role==='manufacturer'? <CreateBlockManufacturerModal cities={cities} setOpen={setModal1}/>
+                    :
+            modal1 && role==='transporter'? <CreateBlockTransporterModal cities={cities} setOpen={setModal1}/>
+            :
+            modal1 && role==='retailer'?<CreateBlockRetailerModal cities={cities} setOpen={setModal1}/>
+            :
+            modal1 && role==="consumer"?<CreateBlockConsumerModal cities={cities} setOpen={setModal1}/>
+            :
+            ""
+            }
         </div>
     );
 }

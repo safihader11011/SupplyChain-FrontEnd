@@ -18,7 +18,7 @@ import {
 } from '@material-ui/pickers';
 //import Joi from 'joi-browser';
 import Error from '../../common/Error';
-
+import AddMoreProducts from './AddMoreProducts/AddMoreProducts'
 
 function getModalStyle() {
     //const top = 50;
@@ -95,17 +95,10 @@ function getModalStyle() {
       marL:{
         marginLeft:theme.spacing(1),
         width:350
-      },
-      bord:{
-        borderRadius:theme.spacing(2),
-        border:"2px solid lightgrey",
-        padding:theme.spacing(4,4,6,4),
-        marginBottom:theme.spacing(2)
-
       }
   }));
   
-const AddMoreProducts = ({cities,setOpen }) => {
+const CreateBlockSupplierModal = ({cities,setOpen }) => {
     const [modalStyle] = React.useState(getModalStyle);
     const [expiryDate, setExpiryDate] = React.useState();
     const [endingDate, setEndingDate] = React.useState();
@@ -114,7 +107,7 @@ const AddMoreProducts = ({cities,setOpen }) => {
     const [initials, setInitials] = useState(false);
     const [list,setList]=useState([])
     const [selectedDate, handleDateChange] = useState(new Date());
-
+    const [count,setCount]=useState([1])
 
     const [data, setData] = useState({});
     const [error, setError] = useState({});
@@ -125,20 +118,13 @@ const AddMoreProducts = ({cities,setOpen }) => {
   
     const inputLabel = React.useRef(null);
     
-  //   useEffect(()=>{
-  //     handleCreateAvailability()
-  //     if(!initials){
-  //         Initialize()
-  //     }
-
-  // },[initials,error])
-
   // const Initialize =async()=>{
   //     const Fleet=await GetFleet(); 
   //     setList(Fleet)
   //     console.log(Fleet)
   //     setInitials(true)
   // }
+
 
 
     const handleClose = () => {
@@ -215,6 +201,12 @@ const AddMoreProducts = ({cities,setOpen }) => {
 
     };
 
+    const handleCount=()=>{
+      var temp=count
+      temp.push(1)
+      setCount(temp)
+    }
+
     // const handleCreate = event => {
     //   if(!startingDate){
     //     var textValue="";
@@ -282,11 +274,19 @@ const AddMoreProducts = ({cities,setOpen }) => {
     // }
     
     return ( 
+        <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={true}
+        onClose={handleClose}
+        className={classes.modalStyle1}
+      >
           <Grid
           container
           xs={12}
           direction="row"
-          className={classes.bord}
+          style={modalStyle}
+          className={classes.paper}
         >
           {
               created?
@@ -300,10 +300,14 @@ const AddMoreProducts = ({cities,setOpen }) => {
               </Grid>
             :
             <div>
-            <Grid container alignItems="center" justify="center">
-              <Typography variant="h6">Item Information</Typography>
+            <Grid container justify="center">
+             <Typography variant="h4" className={classes.bold}>Create Blockchain</Typography>
             </Grid>
-            <Input id="price" variant="outlined" style={{width:"100%"}} label="Price" placeholder="Price" onChange={onChange} />
+
+            <Input id="blockchain" variant="outlined" style={{width:"100%"}} label="Blockchain Name" placeholder="Blockchain Name" onChange={onChange} />
+            {error && (error.blockchain) && <Error text={error.blockchain}/>}
+
+            {/* <Input id="price" variant="outlined" style={{width:"100%"}} label="Price" placeholder="Price" onChange={onChange} />
             {error && (error.price) && <Error text={error.price}/>}
             
             <Input id="product" variant="outlined" style={{width:"100%"}} label="Product Name" placeholder="Product Name" onChange={onChange} />
@@ -333,11 +337,28 @@ const AddMoreProducts = ({cities,setOpen }) => {
 
                 </Grid>
             </Grid>
-        
+            
+            */}
+            {
+              count.map((item,index)=>{
+                return(
+                  <AddMoreProducts key={index}/>
+                )
+              })
+            }
+            <Grid container justify="center">
+                <ButtonComponent variant="outlined" color="primary" styles={{marginTop:15}} onClick={()=>setCount([...count,1])}>Add More Items</ButtonComponent>
+            </Grid>
+
+            <Grid container justify="center">
+                <ButtonComponent variant="contained" color="primary" styles={{marginTop:15,width:120}}>Create</ButtonComponent>
+                <ButtonComponent variant="contained" color="secondary" onClick={()=>setOpen(false)} styles={{marginTop:15,width:120}}>Cancel</ButtonComponent>
+            </Grid>
             </div>
             }
          </Grid> 
+      </Modal>
      );
 }
  
-export default AddMoreProducts;
+export default CreateBlockSupplierModal;
