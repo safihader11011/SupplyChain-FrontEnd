@@ -6,7 +6,7 @@ import Dashboard from './Components/Dashboard/Dashboard'
 const Router = () => {
     return (
         <Switch>
-            <Route exact path="/login" component={Auth} />
+            <Route exact path="/" component={Auth} />
             <Route exact path="/dashboard/:role" component={Dashboard} />
         </Switch>
     );

@@ -22,8 +22,8 @@ import CreateBlockManufacturerModal from './Manufacturer/CreateBlockManufacturer
 import CreateBlockTransporterModal from './Transporter/CreateBlockTransporterModal'
 import CreateBlockRetailerModal from './Retailer/CreateBlockRetailerModal'
 import CreateBlockConsumerModal from './Consumer/CreateBlockConsumerModal'
- 
-// import {Logout} from '../../Services/Auth-Services'
+import {Logout} from '../../Services/Auth-service'
+import Loader from '../common/Loader'
 // import {GetFleet,GetAvailability,GetShipperInformation} from '../../Services/Transporter-Services'
 // import ShipperInformationTable from '../Dashboard/common/Booking/TransporterBooking'
 // import {GetAllCities} from '../../Services/admin-Services'
@@ -33,6 +33,12 @@ const useStyles = makeStyles(theme => ({
     pic:{
         border:"2px solid #2e3344",
         marginTop:theme.spacing(14),
+        borderRadius:theme.spacing(20),
+        '&:hover':{
+            transition:'filter 500ms,transform 800ms',
+            filter:'brightness(50%)',
+            transform:'scale(1.1)'
+        }
         //borderRadius:theme.spacing(50)
     },
     padd:{
@@ -87,7 +93,7 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = (props) => {
     const [initials, setInitials] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const [value, setValue] = useState(0);
     const [modal,setModal]=useState(false)
@@ -97,64 +103,6 @@ const Dashboard = (props) => {
     const [cities,setCities]=useState(null)
 
     
-    const rows1=[
-        {
-            registration:12345,
-            axles:4,
-            tonnage:10,
-            height:50,
-            width:80,
-            length:100,
-            productType:"Vehicle",
-            vehicleType:"Truck",
-            Timestamp:new Date().getTime()
-        },
-        {
-            registration:12345,
-            axles:2,
-            tonnage:10,
-            height:50,
-            width:80,
-            length:100,
-            productType:"Vehicle",
-            vehicleType:"Truck",
-            Timestamp:new Date().getTime()
-        },
-        {
-            registration:12345,
-            axles:3,
-            tonnage:10,
-            height:50,
-            width:80,
-            length:100,
-            productType:"Vehicle",
-            vehicleType:"Truck",
-            Timestamp:new Date().getTime()
-        },
-        {
-            registration:12345,
-            axles:5,
-            tonnage:10,
-            height:50,
-            width:80,
-            length:100,
-            productType:"Vehicle",
-            vehicleType:"Truck",
-            Timestamp:new Date().getTime()
-        },
-        {
-            registration:12345,
-            axles:2,
-            tonnage:10,
-            height:50,
-            width:80,
-            length:100,
-            productType:"Vehicle",
-            vehicleType:"Truck",
-            Timestamp:new Date().getTime()
-        },
-        
-    ]
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -232,10 +180,10 @@ const Dashboard = (props) => {
     //     setBook(ship)
     // }
 
-    // // const handleLogout = event => {
-    //     setLoading(true);
-    //     Logout().then(t => window.open('/admin/login', '_self'));
-    // }
+    const handleLogout = event => {
+        setLoading(true);
+        Logout().then(t => window.open('/', '_self'));
+    }
 
     // const Initialize = () => {
 
@@ -255,23 +203,23 @@ const Dashboard = (props) => {
     const classes = useStyles();
     return ( 
         <div>
-            {/* {
+            {
             loading? <Loader />
                :
-                <div> */}
+                <div>
                     <Grid container direction="row" xs={12}>
                         <Hidden smDown>
                             <Grid style={{paddingTop:"5px",minHeight:"100vh",background:"#2a2a2a"}} container direction="column" alignItems="flex-start" justify="flex-start" sm={2}>
                                 
-                                {/* <div style={{paddingLeft:35,marginBottom:10}}>
-                                    <img className={classes.pic} src={require(`../../Assets/logo final-01.png`)} height="150" width="150"/>
-                                    <Typography color="textSecondary" style={{fontSize:18.5,textAlign:"center"}}>Name</Typography>
-                                </div> */}
+                                <div style={{paddingLeft:35,marginBottom:10}}>
+                                    <img className={classes.pic} src={require(`../assets/avatar.jpg`)} height="150" width="150"/>
+                                    <Typography color="textSecondary" style={{fontSize:18.5,textAlign:"center",color:"white"}}>Name</Typography>
+                                </div>
                                     <span onClick={()=>{setValue(0)}} className={value=="profile"? classes.select:classes.notSelect}>
                                         {/* <img className={classes.paddR} src={require(`../../Assets/Icons/user.png`)} height="20" width="auto"/> */}
-                                        <Typography className={classes.font} variant="body1" component="span">Blockchain</Typography>
+                                        {/* <Typography className={classes.font} variant="body1" component="span">Blockchain</Typography> */}
                                     </span>                              
-                                <Button style={{position:"fixed",bottom:"10px",left:"30px",width:150}}  variant="outlined" color="primary">Logout</Button>
+                                <Button style={{position:"fixed",bottom:"10px",left:"30px",width:150}}  onClick={()=>handleLogout()} variant="outlined" color="primary">Logout</Button>
                             </Grid>
                         </Hidden>
                         
@@ -306,19 +254,19 @@ const Dashboard = (props) => {
                         </Hidden>
 
                     </Grid>
-                {/* </div>
-             }  */}
-            {modal1 && role==='supplier'? <CreateBlockSupplierModal cities={cities} setOpen={setModal1}/>
+                    {modal1 && role==='supplier'? <CreateBlockSupplierModal cities={cities} setOpen={setModal1}/>
                     :
-            modal1 && role==='manufacturer'? <CreateBlockManufacturerModal cities={cities} setOpen={setModal1}/>
+                    modal1 && role==='manufacturer'? <CreateBlockManufacturerModal cities={cities} setOpen={setModal1}/>
+                            :
+                    modal1 && role==='transporter'? <CreateBlockTransporterModal cities={cities} setOpen={setModal1}/>
                     :
-            modal1 && role==='transporter'? <CreateBlockTransporterModal cities={cities} setOpen={setModal1}/>
-            :
-            modal1 && role==='retailer'?<CreateBlockRetailerModal cities={cities} setOpen={setModal1}/>
-            :
-            modal1 && role==="consumer"?<CreateBlockConsumerModal cities={cities} setOpen={setModal1}/>
-            :
-            ""
+                    modal1 && role==='retailer'?<CreateBlockRetailerModal cities={cities} setOpen={setModal1}/>
+                    :
+                    modal1 && role==="consumer"?<CreateBlockConsumerModal cities={cities} setOpen={setModal1}/>
+                    :
+                    ""
+                    }
+                </div> 
             }
         </div>
     );

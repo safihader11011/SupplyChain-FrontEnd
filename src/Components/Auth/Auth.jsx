@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import Signup from "./Signup";
 //import DocumentMeta from 'react-document-meta';
 import Login from "./Login";
+import Loader from '../common/Loader'
 //import Loader from '../common/Loader';
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Link,Hidden } from "@material-ui/core";
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Auth = (props) => {
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [user, setUser] = useState(true);
 	const [signUp, setSignUp] = useState(false);
 	const [data,setData] = useState({});
@@ -244,6 +245,11 @@ const Auth = (props) => {
 
   	const classes = useStyles();
 	return (
+		<div>
+			{
+				loading?
+				<Loader/>
+				:
 			<div className={classes.height}>
 				{/* <Hidden smUp>
 					<HeaderMobile props={props}/>
@@ -263,12 +269,12 @@ const Auth = (props) => {
 						<Grid container sm={4} xs={12}>
 						{signUp === false ? (
 							<Grid container direction="row" justify="center" alignItems="center">
-								<Login style={{padding:"0px",margin:"0px"}}/>
+								<Login style={{padding:"0px",margin:"0px"}} setLoading={setLoading}/>
 								Haven't Signup yet?<Link style={{cursor:'pointer'}} onClick={() => {setData({}); setError({}); setSignUp(true);}}>Sign Up</Link>				
 							</Grid>
 						) : (
 							<Grid container direction="row" justify="center" alignItems="center">
-								<Signup />
+								<Signup setLoading={setLoading}/>
 								<div className={classes.center}> 
 									Already Signup? 
 									<Link style={{cursor:'pointer'}} onClick={() => {setData({}); setError({}); setSignUp(false);}}>Login</Link>
@@ -277,7 +283,9 @@ const Auth = (props) => {
 						)}
 						</Grid>
 					</Grid>
-				}
+				
+			</div>
+			}
 			</div>
 	);
 };

@@ -16,7 +16,7 @@ const Spinner = ({height, width}) => {
             <Loader
                 visible={true}
                 type="Triangle"
-                color="#652F8F"
+                color="#1C86EE"
                 height={height || 100}
                 width={width || 100}
                 timeout={0}

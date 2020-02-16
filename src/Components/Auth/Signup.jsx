@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import Input from "../common/Input";
 import Error from '../common/Error';
 //import { Helmet } from "react-helmet";
@@ -11,7 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import {SignUP} from '../../Services/Auth-service'
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,8 +29,8 @@ const useStyles = makeStyles(theme => ({
     },
   },
   image:{
-    height:50,
-    width:250,
+    height:120,
+    width:"auto",
     padding:theme.spacing(5)
 
   },
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Signup = () => {
+const Signup = ({setLoading}) => {
   const [data, setData] = useState({});
   const [error, setError] = useState({});
   const inputLabel = React.useRef(null);
@@ -51,11 +51,12 @@ const Signup = () => {
 
   const schema = {
     name:Joi.string().label('Name').required(),
-    phone:Joi.number().label('Phone').required(),
+    phone:Joi.string().label('Phone').required(),
     email: Joi.string().email().label('Email').required(),
     role: Joi.string().label('Role').required(),
     password: Joi.string().label('Password').required()
   }
+
 
   const onChange1 = event => {
       
@@ -85,9 +86,18 @@ const Signup = () => {
     setData(temp);
   };
     
-  const handleSignup = event => {
-      console.log(data)
+  const handleSignup = async() => {
+      //console.log(data)
       setError(validate()) 
+      setLoading(true)
+      const res=await SignUP(data)
+      if(res){
+        window.open(`dashboard/${res}`,'_self')
+      }
+      else{
+        setLoading(false)
+      }
+
   }
 
   const classes = useStyles();  
@@ -100,7 +110,7 @@ const Signup = () => {
       </Helmet> */}
 
       <Grid container justify="center" direction="row">
-        <img className={classes.image} alt="Logo" src={require("../assets/icon.jpg")}/>   
+        <img className={classes.image} alt="Logo" src={require("../assets/icon.jpeg")}/>   
       </Grid>
 
     
@@ -148,7 +158,7 @@ const Signup = () => {
         </ButtonComponent>
       </Grid>
 
-      <Grid container direction="row" alignItems="center" xs={12}>
+      {/* <Grid container direction="row" alignItems="center" xs={12}>
         <Grid xs={5}>
           <Divider variant="middle"/>
         </Grid>
@@ -174,7 +184,7 @@ const Signup = () => {
             signup With Facebook
           </ButtonComponent>
         </a>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };
