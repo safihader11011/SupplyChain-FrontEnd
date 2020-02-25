@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import Input from "../common/Input";
 import Error from '../common/Error';
 //import { Helmet } from "react-helmet";
-import { Grid, Divider } from "@material-ui/core";
+import { Grid, Divider, Typography } from "@material-ui/core";
 import ButtonComponent from "../common/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Joi from 'joi-browser';
@@ -85,11 +85,22 @@ const Signup = ({setLoading}) => {
     temp[id] = value;
     setData(temp);
   };
+
+  useEffect(()=>{
+    if(!error){
+      handleSignup()
+    }
+  },[error])
+
+  const handleClick=()=>{
+    setError(validate())   
+  }
     
   const handleSignup = async() => {
-      //console.log(data)
-      setError(validate()) 
       setLoading(true)
+      const temp=data
+      temp['blockchains']=[]
+      setData(temp)
       const res=await SignUP(data)
       if(res){
         window.open(`dashboard/${res}`,'_self')
@@ -153,7 +164,7 @@ const Signup = ({setLoading}) => {
       </Grid>
       <Grid container justify="center" direction="column" alignItems="center">
         {error && error.invalid && <Error text={error.invalid}/>}
-        <ButtonComponent styles={{width:120,paddingTop:10,paddingBottom:10}} onClick={handleSignup} variant="contained" color="primary">
+        <ButtonComponent styles={{width:120,paddingTop:10,paddingBottom:10}} onClick={()=>handleClick()} variant="contained" color="primary">
           Register 
         </ButtonComponent>
       </Grid>

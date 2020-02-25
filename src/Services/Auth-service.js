@@ -1,8 +1,9 @@
 import axios from 'axios'
 
+const endpoint='https://supply-chain-tracking-system.herokuapp.com'
 export const SignUP=({name,email,password,role,phone})=>{
     return new Promise((resolve,reject)=>{
-        axios.post('http://192.168.1.6:3000/user/signup',{name,email,password,role,phone})
+        axios.post(`${endpoint}/user/signup`,{name,email,password,role,phone})
         .then((res)=>{
             localStorage.setItem('Auth-Token', res.data.token);
             resolve(res.data.role)
@@ -21,7 +22,7 @@ export const Logout = async()=>{
 
 export const LOGIN=({email,password})=>{
     return new Promise((resolve,reject)=>{
-        axios.post('http://192.168.1.4:3000/user/login',{email,password})
+        axios.post(`${endpoint}/user/login`,{email,password})
         .then((res)=>{
             console.log(res)
             localStorage.setItem('Auth-Token', res.data.token);
@@ -29,6 +30,24 @@ export const LOGIN=({email,password})=>{
         })
         .catch((err)=>{
             console.log("User not found")
+            resolve(false)
+        })
+    })
+}
+
+export const GetUser=()=>{
+    return new Promise((resolve,reject)=>{
+        axios.get(`${endpoint}/user/getuser`,{
+            headers:{
+                auth:localStorage.getItem('Auth-Token')
+            }
+        })
+        .then((res)=>{
+            //console.log(res)
+            resolve(res.data)
+        })
+        .catch((res)=>{
+            //console.log(res)
             resolve(false)
         })
     })

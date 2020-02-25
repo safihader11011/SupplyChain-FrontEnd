@@ -19,6 +19,9 @@ import {
 //import Joi from 'joi-browser';
 import Error from '../../common/Error';
 import AddMoreProducts from './AddMoreProducts/AddMoreProducts'
+import {GetUser} from '../../../Services/Auth-service'
+import {AddBlock} from '../../../Services/Supplier-services'
+import {GetAllChains} from '../../../Services/AddBlocks'
 
 function getModalStyle() {
     //const top = 50;
@@ -108,7 +111,6 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
     const [list,setList]=useState([])
     const [selectedDate, handleDateChange] = useState(new Date());
     const [count,setCount]=useState([1])
-
     const [data, setData] = useState({});
     const [error, setError] = useState({});
     const [created,setCreated]=useState(false)
@@ -117,14 +119,6 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
     const classes = useStyles();
   
     const inputLabel = React.useRef(null);
-    
-  // const Initialize =async()=>{
-  //     const Fleet=await GetFleet(); 
-  //     setList(Fleet)
-  //     console.log(Fleet)
-  //     setInitials(true)
-  // }
-
 
 
     const handleClose = () => {
@@ -134,10 +128,6 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
     const handleChange = (event, func)=> {
         func(event.target.value);
     };
-
-    // const handleDateChange = date => {
-    //     setSelectedDate(date);
-    // };
 
     // const schema = {
     //   vehicle:Joi.string().label('vehicle').required(),
@@ -162,8 +152,6 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
   
     //   return newError;   
     //   }
-
-
 
     const onChange = event => {
       const { id, value } = event.target;
@@ -260,19 +248,52 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
         
 
     // }
-
-    // const handleCreateAvailability=()=>{
-    //     if(!error){
-    //       const temp=data;
-    //       var date=new Date()
-    //       temp['Timestamp'] = date.toLocaleString();
-    //       setData(temp);
-    //       if(CreateAvailability(data)){
-    //         setCreated(true)
-    //       }
-    //     }
+    // const handleClick=()=>{
+    //   setError(validate())
     // }
-    
+
+    const handleCreate=async()=>{
+      //console.log(data)
+      const temp=Object.keys(data)
+      const user=await GetUser()
+      //console.log(temp)
+      var items=[];
+      var obj={};
+      var count=0
+      temp.map(item=>{
+        if(item!=='blockchain'){
+          if(count===0){
+            obj.price=data[item];
+            count++;
+          }
+          else if(count===1){
+            obj.product=data[item];
+            count++;
+          }
+          else if(count===2){
+            obj.quantity=data[item];
+            items.push(obj)
+            obj=Object.assign({},{})
+            count=0;
+          } 
+        }
+      })
+      var data1={};
+      data1['name']=data.blockchain;
+      data1['blocks']={
+        name:user.name,
+        role:user.role,
+        data:items
+      }
+      const res=await AddBlock(data1,user._id)
+      if(res){
+        setCreated(true)
+      }
+      else{
+
+      }
+    }
+
     return ( 
         <Modal
         aria-labelledby="simple-modal-title"
@@ -307,42 +328,10 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
             <Input id="blockchain" variant="outlined" style={{width:"100%"}} label="Blockchain Name" placeholder="Blockchain Name" onChange={onChange} />
             {error && (error.blockchain) && <Error text={error.blockchain}/>}
 
-            {/* <Input id="price" variant="outlined" style={{width:"100%"}} label="Price" placeholder="Price" onChange={onChange} />
-            {error && (error.price) && <Error text={error.price}/>}
-            
-            <Input id="product" variant="outlined" style={{width:"100%"}} label="Product Name" placeholder="Product Name" onChange={onChange} />
-            {error && (error.product) && <Error text={error.product}/>}
-
-            <Input id="quantity" variant="outlined" style={{width:"100%"}} label="Quantity" placeholder="Quantity" onChange={onChange} />
-            {error && (error.quantity) && <Error text={error.quantity}/>}
- 
-            <Grid container>
-                <Grid className={classes.marL} container alignItems="center" xs={12}>
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                      style={{width:"100%"}}
-                      margin="normal"
-                      id="expiryDate"
-                      format={'dd/MM/yyyy'}
-                      value={expiryDate}
-                      label="Expiry Date"
-                      name="expiryDate"
-                      onChange={(event)=>onChange2(event,setExpiryDate,'expiryDate')}
-                      KeyboardButtonProps={{
-                        'aria-label': 'change time',
-                      }}
-                    />
-                  </MuiPickersUtilsProvider>
-                  {error && error.expiryDate && <Error text={error.expiryDate} /> }
-
-                </Grid>
-            </Grid>
-            
-            */}
             {
               count.map((item,index)=>{
                 return(
-                  <AddMoreProducts key={index}/>
+                  <AddMoreProducts data={data} setData={setData} onChange={onChange} key={index} index={index} />
                 )
               })
             }
@@ -351,7 +340,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
             </Grid>
 
             <Grid container justify="center">
-                <ButtonComponent variant="contained" color="primary" styles={{marginTop:15,width:120}}>Create</ButtonComponent>
+                <ButtonComponent variant="contained" color="primary" styles={{marginTop:15,width:120}} onClick={()=>handleCreate()}>Create</ButtonComponent>
                 <ButtonComponent variant="contained" color="secondary" onClick={()=>setOpen(false)} styles={{marginTop:15,width:120}}>Cancel</ButtonComponent>
             </Grid>
             </div>

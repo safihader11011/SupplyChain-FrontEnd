@@ -18,6 +18,8 @@ import {
 } from '@material-ui/pickers';
 //import Joi from 'joi-browser';
 import Error from '../../common/Error';
+import {GetUser} from '../../../Services/Auth-service'
+import {AddBlockOther,GetBlockchains} from '../../../Services/AddBlocks'
 
 function getModalStyle() {
     //const top = 50;
@@ -97,7 +99,7 @@ function getModalStyle() {
       }
   }));
   
-const CreateBlockTransporterModal = ({cities,setOpen }) => {
+const CreateBlockTransporterModal = ({blockchains,setOpen }) => {
     const [modalStyle] = React.useState(getModalStyle);
     const [expiryDate, setExpiryDate] = React.useState();
     const [manufacturingDate, setmanufacturingDate] = React.useState();
@@ -109,7 +111,7 @@ const CreateBlockTransporterModal = ({cities,setOpen }) => {
     const [selectedDate, handleDateChange] = useState(new Date());
     const [count,setCount]=useState([1])
     const [map,setMap]=useState(false)
-
+    const [chain,setChain]=useState({});
     const [data, setData] = useState({});
     const [error, setError] = useState({});
     const [created,setCreated]=useState(false)
@@ -225,6 +227,24 @@ const CreateBlockTransporterModal = ({cities,setOpen }) => {
     };
 
     
+    const handleCreate=async()=>{
+      const user=await GetUser()
+      var data1={};
+      data1['name']=user.name;
+      data1['role']=user.role;
+      data1['UserId']=user._id;
+      data1['data']=[
+        data
+      ]
+      const res=await AddBlockOther(data1,data.blockchains)
+      if(res){
+        setCreated(true)
+      }
+      else{
+
+      }
+    }
+
     return ( 
         <Modal
         aria-labelledby="simple-modal-title"
@@ -257,6 +277,30 @@ const CreateBlockTransporterModal = ({cities,setOpen }) => {
              <Typography variant="h4" style={{textAlign:"center"}} className={classes.bold}>Add Transportation Informaion</Typography>
             </Grid>
 
+                <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+                    Blockchains
+                </InputLabel>
+                <Select
+                labelId="demo-simple-select-outlined-label"
+                name="blockchains"
+                //value={axles}
+                //onChange={(event)=>handleChange(event,setAxles)}
+                onChange={onChange1}
+                id="blockchains"
+                
+                // labelWidth={labelWidth}
+                >
+                {
+                blockchains.map((item)=>{
+                  return(
+                    <MenuItem value={item._id}>{item.name}</MenuItem>
+                  )
+                })
+              }
+                </Select>
+            </FormControl>
+            
             <Input id="products" variant="outlined" style={{width:"100%"}} label="Total Numbers of Products" placeholder="Total Numbers of Products" onChange={onChange} />
             {error && (error.products) && <Error text={error.products}/>}
             
@@ -275,7 +319,7 @@ const CreateBlockTransporterModal = ({cities,setOpen }) => {
            
             
             <Grid container justify="center">
-                <ButtonComponent variant="contained" color="primary" styles={{marginTop:15,width:120}}>Create</ButtonComponent>
+                <ButtonComponent variant="contained" color="primary" styles={{marginTop:15,width:120}} onClick={()=>handleCreate()}>Create</ButtonComponent>
                 <ButtonComponent variant="contained" color="secondary" onClick={()=>setOpen(false)} styles={{marginTop:15,width:120}}>Cancel</ButtonComponent>
             </Grid>
             </div>

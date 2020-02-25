@@ -18,6 +18,8 @@ import {
 } from '@material-ui/pickers';
 //import Joi from 'joi-browser';
 import Error from '../../common/Error';
+import {AddBlockOther} from '../../../Services/AddBlocks'
+import {GetUser} from '../../../Services/Auth-service'
 
 function getModalStyle() {
     //const top = 50;
@@ -97,7 +99,7 @@ function getModalStyle() {
       }
   }));
   
-const CreateBlockManufacturerModal = ({cities,setOpen }) => {
+const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
     const [modalStyle] = React.useState(getModalStyle);
     const [expiryDate, setExpiryDate] = React.useState();
     const [manufacturingDate, setmanufacturingDate] = React.useState();
@@ -109,7 +111,6 @@ const CreateBlockManufacturerModal = ({cities,setOpen }) => {
     const [selectedDate, handleDateChange] = useState(new Date());
     const [count,setCount]=useState([1])
     const [map,setMap]=useState(false)
-
     const [data, setData] = useState({});
     const [error, setError] = useState({});
     const [created,setCreated]=useState(false)
@@ -172,7 +173,6 @@ const CreateBlockManufacturerModal = ({cities,setOpen }) => {
       const temp = data;
       temp[id] = value;
       setData(temp);
-      console.log(data)
       if(id==='items'){
         if(!data.items){
           setItemNo([])
@@ -191,7 +191,6 @@ const CreateBlockManufacturerModal = ({cities,setOpen }) => {
     };
     
     const onChange1 = event => {
-      
       const { name, value } = event.target;
       const temp = data;
       temp[name] = value;
@@ -223,6 +222,7 @@ const CreateBlockManufacturerModal = ({cities,setOpen }) => {
       setData(temp);
 
     };
+
 
     // const handleCreate = event => {
     //   if(!startingDate){
@@ -278,6 +278,26 @@ const CreateBlockManufacturerModal = ({cities,setOpen }) => {
 
     // }
 
+   
+
+    const handleCreate=async()=>{
+      const user=await GetUser()
+      var data1={};
+      data1['name']=user.name
+      data1['role']=user.role
+      data1['UserId']=user._id
+      data1['data']=[
+        data
+      ]
+      console.log(data1)
+      const res=await AddBlockOther(data1,data.blockchains)
+      if(res){
+        setCreated(true)
+      }
+      else{
+
+      }
+    }
     // const handleCreateAvailability=()=>{
     //     if(!error){
     //       const temp=data;
@@ -319,8 +339,32 @@ const CreateBlockManufacturerModal = ({cities,setOpen }) => {
             <div>
               
             <Grid container justify="center">
-             <Typography variant="h4" style={{textAlign:"center"}} className={classes.bold}>Add Manufacuring Informaion</Typography>
+             <Typography variant="h4" style={{textAlign:"center"}} className={classes.bold}>Add Manufacturing Informaion</Typography>
             </Grid>
+
+            <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+                Blockchains
+            </InputLabel>
+            <Select
+            labelId="demo-simple-select-outlined-label"
+            name="blockchains"
+            //value={axles}
+            //onChange={(event)=>handleChange(event,setAxles)}
+            onChange={onChange1}
+            id="blockchains"
+            
+            // labelWidth={labelWidth}
+            >
+              {
+                blockchains.map((item)=>{
+                  return(
+                    <MenuItem value={item._id}>{item.name}</MenuItem>
+                  )
+                })
+              }
+            </Select>
+        </FormControl>
 
             <Input id="items" variant="outlined" style={{width:"100%"}} label="Number of Items" placeholder="Number of Items" onChange={onChange} />
             {error && (error.items) && <Error text={error.items}/>}
@@ -390,7 +434,7 @@ const CreateBlockManufacturerModal = ({cities,setOpen }) => {
            
             
             <Grid container justify="center">
-                <ButtonComponent variant="contained" color="primary" styles={{marginTop:15,width:120}}>Create</ButtonComponent>
+                <ButtonComponent variant="contained" color="primary" styles={{marginTop:15,width:120}} onClick={()=>handleCreate()}>Create</ButtonComponent>
                 <ButtonComponent variant="contained" color="secondary" onClick={()=>setOpen(false)} styles={{marginTop:15,width:120}}>Cancel</ButtonComponent>
             </Grid>
             </div>

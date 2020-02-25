@@ -7,6 +7,7 @@ import ButtonComponent from "../common/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Joi from 'joi-browser';
 import {LOGIN} from '../../Services/Auth-service'
+import { useEffect } from "react";
 //import { Helmet } from "react-helmet";
 
 
@@ -50,6 +51,12 @@ const Login = ({setLoading}) => {
     password: Joi.string().label('Password').required()
   }
 
+  useEffect(()=>{
+    if(!error){
+      handleLogin()
+    }
+  },[error])
+
   const validate = () => {
     const result = Joi.validate(data, schema, {abortEarly:false});
   
@@ -61,7 +68,7 @@ const Login = ({setLoading}) => {
     });
 
     return newError;   
-    }
+  }
 
   const onChange = event => {
     const { id, value } = event.target;
@@ -69,10 +76,13 @@ const Login = ({setLoading}) => {
     temp[id] = value;
     setData(temp);
   };
+
+  const handleSignIn=()=>{
+    setError(validate())  
+  }
     
   const handleLogin = async() => {
       //console.log(data)
-      setError(validate())
       setLoading(true) 
       const res=await LOGIN(data)
       if(res){
@@ -102,7 +112,7 @@ const Login = ({setLoading}) => {
         </Grid>
         <Grid container  justify="center" direction="column" alignItems="center">
           {error && error.invalid && <Error text={error.invalid}/>}
-          <ButtonComponent styles={{width:120,paddingTop:10,paddingBottom:10}} onClick={handleLogin} variant="contained" color="primary">Login</ButtonComponent>
+          <ButtonComponent styles={{width:120,paddingTop:10,paddingBottom:10}} onClick={handleSignIn} variant="contained" color="primary">Login</ButtonComponent>
         </Grid>
         {error && error.exist && <Error text={error.exist}/>}
       </Grid>

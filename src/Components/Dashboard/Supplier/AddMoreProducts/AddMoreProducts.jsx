@@ -105,7 +105,7 @@ function getModalStyle() {
       }
   }));
   
-const AddMoreProducts = ({cities,setOpen }) => {
+const AddMoreProducts = ({data,setData,onChange,setOpen,index}) => {
     const [modalStyle] = React.useState(getModalStyle);
     const [expiryDate, setExpiryDate] = React.useState();
     const [endingDate, setEndingDate] = React.useState();
@@ -116,7 +116,6 @@ const AddMoreProducts = ({cities,setOpen }) => {
     const [selectedDate, handleDateChange] = useState(new Date());
 
 
-    const [data, setData] = useState({});
     const [error, setError] = useState({});
     const [created,setCreated]=useState(false)
      
@@ -179,13 +178,13 @@ const AddMoreProducts = ({cities,setOpen }) => {
 
 
 
-    const onChange = event => {
-      const { id, value } = event.target;
-      const temp = data;
-      temp[id] = value;
-      setData(temp);
+    // const onChange = event => {
+    //   const { id, value } = event.target;
+    //   const temp = data;
+    //   temp[id] = value;
+    //   setData(temp);
 
-    };
+    // };
     
     const onChange1 = event => {
       
@@ -303,13 +302,13 @@ const AddMoreProducts = ({cities,setOpen }) => {
             <Grid container alignItems="center" justify="center">
               <Typography variant="h6">Item Information</Typography>
             </Grid>
-            <Input id="price" variant="outlined" style={{width:"100%"}} label="Price" placeholder="Price" onChange={onChange} />
+            <Input id={`price${index}`} variant="outlined" style={{width:"100%"}} label="Price" placeholder="Price" onChange={onChange} />
             {error && (error.price) && <Error text={error.price}/>}
             
-            <Input id="product" variant="outlined" style={{width:"100%"}} label="Product Name" placeholder="Product Name" onChange={onChange} />
+            <Input id={`product${index}`} variant="outlined" style={{width:"100%"}} label="Product Name" placeholder="Product Name" onChange={onChange} />
             {error && (error.product) && <Error text={error.product}/>}
 
-            <Input id="quantity" variant="outlined" style={{width:"100%"}} label="Quantity" placeholder="Quantity" onChange={onChange} />
+            <Input id={`quantity${index}`} variant="outlined" style={{width:"100%"}} label="Quantity" placeholder="Quantity" onChange={onChange} />
             {error && (error.quantity) && <Error text={error.quantity}/>}
  
             <Grid container>
@@ -322,7 +321,7 @@ const AddMoreProducts = ({cities,setOpen }) => {
                       format={'dd/MM/yyyy'}
                       value={expiryDate}
                       label="Expiry Date"
-                      name="expiryDate"
+                      name={`expiryDate${index}`}
                       onChange={(event)=>onChange2(event,setExpiryDate,'expiryDate')}
                       KeyboardButtonProps={{
                         'aria-label': 'change time',

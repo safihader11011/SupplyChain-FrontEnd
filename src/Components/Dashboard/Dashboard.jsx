@@ -22,8 +22,12 @@ import CreateBlockManufacturerModal from './Manufacturer/CreateBlockManufacturer
 import CreateBlockTransporterModal from './Transporter/CreateBlockTransporterModal'
 import CreateBlockRetailerModal from './Retailer/CreateBlockRetailerModal'
 import CreateBlockConsumerModal from './Consumer/CreateBlockConsumerModal'
-import {Logout} from '../../Services/Auth-service'
+import {Logout,GetUser} from '../../Services/Auth-service'
+import {GetBlockchains,GetAllChains} from '../../Services/AddBlocks'
 import Loader from '../common/Loader'
+import ChainTable from './ChainTable'
+import DetailModal from './DetailModal'
+
 // import {GetFleet,GetAvailability,GetShipperInformation} from '../../Services/Transporter-Services'
 // import ShipperInformationTable from '../Dashboard/common/Booking/TransporterBooking'
 // import {GetAllCities} from '../../Services/admin-Services'
@@ -87,6 +91,9 @@ const useStyles = makeStyles(theme => ({
     },
     Top:{
         margin:theme.spacing(3)
+    },
+    chain:{
+        padding:theme.spacing(5)
     }
 }));
 
@@ -101,7 +108,11 @@ const Dashboard = (props) => {
     const [avail,setAvail]=useState(null)
     const [book,setBook]=useState(null)
     const [cities,setCities]=useState(null)
-
+    const [chain,setChain]=useState();
+    const [userChains,setUserChains]=useState()
+    const [userInfo,setUserInfo]=useState()
+    const [details,setDetails]=useState(false)
+    const [row,setRow]=useState()
     
 
     const handleChange = (event, newValue) => {
@@ -111,95 +122,49 @@ const Dashboard = (props) => {
 
     const {role}=props.match.params
 
-    // const handleLogout=()=>{
-    //      setLoading(true);
-    //     Logout();
-    // }
+    useEffect(()=>{
+        if(!chain){
+            getchain()
+            if(!userChains){
+                getUserChains()
+                if(!userInfo){
+                    getUserInfo()
+                }
+            }
+        }
 
+   },[chain])
 
-    // useEffect(()=>{
-        
-    //     const Initialize=async()=>{
-    //         const rows=await GetFleet()
-    //         const city=await GetAllCities()
-    //         setCities(city)
-    //         // const av=await GetAvailability()
-    //         // setAvail(av)
-    //         setData(rows)
-    //         if(data ){
-    //             setInitials(true);
-                
-    //         }
-    //     }
-        
-    //     const Initialize1=async()=>{
-    //         const av=await GetAvailability()
-    //         setAvail(av)
-    //         if(avail){
-    //             setInitials(true);
-    //         }
-    //     }
+   const getUserInfo=async()=>{
+        GetUser()
+        .then((res)=>{
+            setUserInfo(res)
+        })
+        .catch(err=>{
+            setUserInfo(err)
+        })
 
-    //     const Initialize2=async()=>{
-    //         const ship=await GetShipperInformation()
-    //         setBook(ship)
-    //         if(book){
-    //             setInitials(true);
-    //         }
-    //     }
+   }
 
-        
+  const getUserChains =() => {
+      GetAllChains()
+      .then((res)=>{
+          console.log(res)
+        setUserChains(res)
+      })
+  };
 
-    //     if(!initials){
-    //         Initialize()
-    //         Initialize1() 
-    //         Initialize2()
-    //     }
-    //     if(!modal){
-    //         Init()
-    //     }
-    //     if(!modal1){
-    //         Init1()
-    //     }
-    // },[initials,modal,modal1])
-
-    // const Init=async()=>{
-    //     setData(null)
-    //     const rows=await GetFleet()
-    //     setData(rows)
-    // }
-    // const Init1=async()=>{
-    //     setAvail(null)
-    //     const av=await GetAvailability()
-    //     setAvail(av)
-    // }
-
-    // const Init2=async()=>{
-    //     setBook(null)
-    //     const ship=await GetShipperInformation()
-    //     setBook(ship)
-    // }
+   const getchain=async()=>{
+       const res=await GetBlockchains();
+       setChain(res)
+   }
 
     const handleLogout = event => {
         setLoading(true);
         Logout().then(t => window.open('/', '_self'));
     }
 
-    // const Initialize = () => {
-
-    //     const result = queryString.parse(props.location.search);
-    //     if (result && result.NewProduct) setValue(0);
-    //     setInitials(true);
-
-    // }
-
-    // useEffect(() => {
-        
-    //     if (!initials) Initialize();
-        
-    // }, [initials])
     
-
     const classes = useStyles();
     return ( 
         <div>
@@ -213,7 +178,7 @@ const Dashboard = (props) => {
                                 
                                 <div style={{paddingLeft:35,marginBottom:10}}>
                                     <img className={classes.pic} src={require(`../assets/avatar.jpg`)} height="150" width="150"/>
-                                    <Typography color="textSecondary" style={{fontSize:18.5,textAlign:"center",color:"white"}}>Name</Typography>
+                                    <Typography color="textSecondary" style={{fontSize:18.5,textAlign:"center",color:"white"}}>{userInfo? userInfo.name:"User"}</Typography>
                                 </div>
                                     <span onClick={()=>{setValue(0)}} className={value=="profile"? classes.select:classes.notSelect}>
                                         {/* <img className={classes.paddR} src={require(`../../Assets/Icons/user.png`)} height="20" width="auto"/> */}
@@ -230,13 +195,17 @@ const Dashboard = (props) => {
                                 {/* {value===1 && <Button onClick={()=>setModal(true)} className={classes.Top} color="primary" variant="contained">Create New Vehicle</Button>}
                                 {value===2 && ""} */}
                             </Grid>
-                            <Grid container alignItems="flex-start">
+                            <Grid container alignItems="flex-start" justify="center">
                                 {/* {value===1 && data ?  <TransporterTable rows={data} />:data===null? <Loader/>: ""}
                                 {value===0 && avail? <Availability rows={avail}/>:avail===null?<Loader/>:"" }
                                 {value===2 && book? <ShipperInformationTable rows={book}/>:book===null?<Loader/>:"" } */}
+                                <Typography variant="h5" className={classes.chain} color="primary">Blockchains</Typography>
+                                {
+                                    userChains && <ChainTable setopen={setDetails} setRow={setRow} rows={userChains}/>   
+                                }
                             </Grid>
+                            {details && <DetailModal data={row} setOpen={setDetails}/>}
                         </Grid>
-
                         <Hidden smUp>
                             <Paper square className={classes.root}>
                                 <Tabs
@@ -254,15 +223,15 @@ const Dashboard = (props) => {
                         </Hidden>
 
                     </Grid>
-                    {modal1 && role==='supplier'? <CreateBlockSupplierModal cities={cities} setOpen={setModal1}/>
+                    {modal1 && role==='supplier'? <CreateBlockSupplierModal blockchains={chain} setOpen={setModal1}/>
                     :
-                    modal1 && role==='manufacturer'? <CreateBlockManufacturerModal cities={cities} setOpen={setModal1}/>
+                    modal1 && role==='manufacturer'? <CreateBlockManufacturerModal blockchains={chain} setOpen={setModal1}/>
                             :
-                    modal1 && role==='transporter'? <CreateBlockTransporterModal cities={cities} setOpen={setModal1}/>
+                    modal1 && role==='transporter'? <CreateBlockTransporterModal blockchains={chain} setOpen={setModal1}/>
                     :
-                    modal1 && role==='retailer'?<CreateBlockRetailerModal cities={cities} setOpen={setModal1}/>
+                    modal1 && role==='retailer'?<CreateBlockRetailerModal blockchains={chain} setOpen={setModal1}/>
                     :
-                    modal1 && role==="consumer"?<CreateBlockConsumerModal cities={cities} setOpen={setModal1}/>
+                    modal1 && role==="consumer"?<CreateBlockConsumerModal blockchains={chain} setOpen={setModal1}/>
                     :
                     ""
                     }
