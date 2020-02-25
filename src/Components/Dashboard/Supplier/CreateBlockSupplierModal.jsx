@@ -172,7 +172,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
       setData(temp);
     };
 
-    const onChange2 = (event,name,value) => {
+    const onChange2 = (event,name,value,index) => {
       
       console.log(event)
       var textValue="";
@@ -187,7 +187,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
       name(event)
       const time = textValue
       const temp = data;
-      temp[value] = time;
+      temp[index] = time;
       setData(temp);
 
     };
@@ -256,15 +256,13 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
     // }
 
     const handleCreate=async()=>{
-      //console.log(data)
-      
       setLoading(true)
       const temp=Object.keys(data)
       const user=await GetUser()
-      //console.log(temp)
       var items=[];
       var obj={};
       var count=0
+      var data1={};
       temp.map(item=>{
         if(item!=='blockchain'){
           if(count===0){
@@ -277,19 +275,22 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
           }
           else if(count===2){
             obj.quantity=data[item];
+            count++
+          } 
+          else if(count===3){
+            obj.expiry=data[item]
             items.push(obj)
             obj=Object.assign({},{})
             count=0;
-          } 
+          }
         }
-      })
-      var data1={};
-      data1['name']=data.blockchain;
-      data1['blocks']={
+        data1['name']=data.blockchain;
+        data1['blocks']={
         name:user.name,
         role:user.role,
         data:items
       }
+      })
       const res=await AddBlock(data1,user._id)
       if(res){
         setLoading(false)
@@ -340,7 +341,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
             {
               count.map((item,index)=>{
                 return(
-                  <AddMoreProducts data={data} setData={setData} onChange={onChange} key={index} index={index} />
+                  <AddMoreProducts data={data} setData={setData} onChange2={onChange2} onChange={onChange} key={index} index={index} />
                 )
               })
             }

@@ -35,12 +35,17 @@ export const GetAllChains=()=>{
         then((user)=>{
             axios.get(`${endpoint}/api/supplychain/fetchById/${user._id}`)
             .then((res)=>{
-                resolve(res.data.data[0].block_chain_list)
+                if(res.data!==[]){
+                    resolve(res.data.data[0].block_chain_list)
+                }
+                else{
+                    resolve([])
+                }
                 console.log(res)
             })
             .catch(err=>{
-                console.log(err)
-                //resolve([])
+                console.log([])
+                resolve([])
             })
         })
         .catch((err)=>{

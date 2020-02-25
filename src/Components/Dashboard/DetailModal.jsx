@@ -160,6 +160,7 @@ const DetailModal = ({setOpen,data}) => {
                                             {prod.cost && <Typography component="span" className={classes.bld}>Transportation Cost : <Typography component="span">{prod.cost}</Typography><br/></Typography>}
                                             {prod.count && <Typography component="span" className={classes.bld}>Count : <Typography component="span">{prod.count}</Typography><br/></Typography>}
                                             {prod.finalProduct && <Typography component="span" className={classes.bld}>Price of Final Product : <Typography component="span">{prod.finalProduct}</Typography><br/></Typography>}
+                                            <Divider className={classes.divider}/>
                                         </div>
                                     )
                                 })

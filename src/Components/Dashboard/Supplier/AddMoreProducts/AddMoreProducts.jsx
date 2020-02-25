@@ -105,7 +105,7 @@ function getModalStyle() {
       }
   }));
   
-const AddMoreProducts = ({data,setData,onChange,setOpen,index}) => {
+const AddMoreProducts = ({data,setData,onChange2,onChange,setOpen,index}) => {
     const [modalStyle] = React.useState(getModalStyle);
     const [expiryDate, setExpiryDate] = React.useState();
     const [endingDate, setEndingDate] = React.useState();
@@ -194,26 +194,7 @@ const AddMoreProducts = ({data,setData,onChange,setOpen,index}) => {
       setData(temp);
     };
 
-    const onChange2 = (event,name,value) => {
-      
-      console.log(event)
-      var textValue="";
-      if(value==='expiryDate'){
-        const date = event.getUTCDate().toString()
-        const month = (event.getUTCMonth()+1).toString()
-        const year =  event.getUTCFullYear().toString()
-        textValue = date + '/' + month + '/' + year;
-      }
-      
-      console.log(textValue)
-      name(event)
-      const time = textValue
-      const temp = data;
-      temp[value] = time;
-      setData(temp);
-
-    };
-
+    
     // const handleCreate = event => {
     //   if(!startingDate){
     //     var textValue="";
@@ -322,7 +303,7 @@ const AddMoreProducts = ({data,setData,onChange,setOpen,index}) => {
                       value={expiryDate}
                       label="Expiry Date"
                       name={`expiryDate${index}`}
-                      onChange={(event)=>onChange2(event,setExpiryDate,'expiryDate')}
+                      onChange={(event)=>onChange2(event,setExpiryDate,'expiryDate',`expiryDate${index}`)}
                       KeyboardButtonProps={{
                         'aria-label': 'change time',
                       }}
