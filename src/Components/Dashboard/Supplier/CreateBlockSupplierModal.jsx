@@ -17,6 +17,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 //import Joi from 'joi-browser';
+import Loader from '../../common/Loader'
 import Error from '../../common/Error';
 import AddMoreProducts from './AddMoreProducts/AddMoreProducts'
 import {GetUser} from '../../../Services/Auth-service'
@@ -114,6 +115,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
     const [data, setData] = useState({});
     const [error, setError] = useState({});
     const [created,setCreated]=useState(false)
+    const [Loading,setLoading]=useState(false)
      
 
     const classes = useStyles();
@@ -123,6 +125,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
 
     const handleClose = () => {
         setOpen(false);
+        window.location.reload()
     };
 
     const handleChange = (event, func)=> {
@@ -254,6 +257,8 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
 
     const handleCreate=async()=>{
       //console.log(data)
+      
+      setLoading(true)
       const temp=Object.keys(data)
       const user=await GetUser()
       //console.log(temp)
@@ -287,10 +292,11 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
       }
       const res=await AddBlock(data1,user._id)
       if(res){
+        setLoading(false)
         setCreated(true)
       }
       else{
-
+        setLoading(false)
       }
     }
 
@@ -310,6 +316,9 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
           className={classes.paper}
         >
           {
+            Loading?
+              <Loader/>
+              :
               created?
               <Grid container alignItems="center" justify="center">
                 <Grid container alignItems="center" justify="center">
@@ -320,7 +329,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
                 </Grid>
               </Grid>
             :
-            <div>
+              <div>
             <Grid container justify="center">
              <Typography variant="h4" className={classes.bold}>Create Blockchain</Typography>
             </Grid>

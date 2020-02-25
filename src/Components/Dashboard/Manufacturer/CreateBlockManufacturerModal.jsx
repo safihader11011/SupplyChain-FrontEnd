@@ -17,6 +17,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 //import Joi from 'joi-browser';
+import Loader from '../../common/Loader'
 import Error from '../../common/Error';
 import {AddBlockOther} from '../../../Services/AddBlocks'
 import {GetUser} from '../../../Services/Auth-service'
@@ -115,6 +116,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
     const [error, setError] = useState({});
     const [created,setCreated]=useState(false)
     const [itemNo,setItemNo]=useState([])
+    const [Loading,setLoading]=useState(false)
      
 
     const classes = useStyles();
@@ -281,6 +283,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
    
 
     const handleCreate=async()=>{
+      setLoading(true)
       const user=await GetUser()
       var data1={};
       data1['name']=user.name
@@ -292,10 +295,11 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
       console.log(data1)
       const res=await AddBlockOther(data1,data.blockchains)
       if(res){
+        setLoading(false)
         setCreated(true)
       }
       else{
-
+        setLoading(false)
       }
     }
     // const handleCreateAvailability=()=>{
@@ -325,7 +329,10 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
           style={modalStyle}
           className={classes.paper}
         >
-          {
+          { 
+              Loading?
+              <Loader/>
+              :
               created?
               <Grid container alignItems="center" justify="center">
                 <Grid container alignItems="center" justify="center">

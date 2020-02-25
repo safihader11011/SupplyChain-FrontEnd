@@ -9,7 +9,6 @@ export const SignUP=({name,email,password,role,phone})=>{
             resolve(res.data.role)
         })
         .catch((res)=>{
-            console.log(res)
             resolve(false)
         })
     })

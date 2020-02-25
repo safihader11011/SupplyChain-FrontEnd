@@ -17,6 +17,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 //import Joi from 'joi-browser';
+import Loader from '../../common/Loader'
 import Error from '../../common/Error';
 import {GetUser} from '../../../Services/Auth-service'
 import {AddBlockOther} from '../../../Services/AddBlocks'
@@ -112,7 +113,7 @@ const CreateBlockConsumerModal = ({blockchains,setOpen }) => {
     const [selectedDate, handleDateChange] = useState(new Date());
     const [count,setCount]=useState([1])
     const [map,setMap]=useState(false)
-
+    const [Loading,setLoading]=useState(false)
     const [data, setData] = useState({});
     const [error, setError] = useState({});
     const [created,setCreated]=useState(false)
@@ -228,6 +229,7 @@ const CreateBlockConsumerModal = ({blockchains,setOpen }) => {
     };
 
     const handleCreate=async()=>{
+      setLoading(true)
       const user=await GetUser()
       var data1={};
       data1['name']=user.name;
@@ -238,10 +240,11 @@ const CreateBlockConsumerModal = ({blockchains,setOpen }) => {
       ]
       const res=await AddBlockOther(data1,data.blockchains)
       if(res){
+        setLoading(false)
         setCreated(true)
       }
       else{
-
+        setLoading(false)
       }
     }
     
@@ -261,6 +264,9 @@ const CreateBlockConsumerModal = ({blockchains,setOpen }) => {
           className={classes.paper}
         >
           {
+            Loading?
+              <Loader/>
+              :
               created?
               <Grid container alignItems="center" justify="center">
                 <Grid container alignItems="center" justify="center">

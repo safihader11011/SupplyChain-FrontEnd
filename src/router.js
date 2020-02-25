@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Auth from './Components/Auth/Auth'
 import Dashboard from './Components/Dashboard/Dashboard'
+import ProtectedRoute from './Components/RouteProtection/ProtectedRoute';
 
 const Router = () => {
     return (

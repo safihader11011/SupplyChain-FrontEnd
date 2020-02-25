@@ -47,6 +47,7 @@ const Signup = ({setLoading}) => {
   const [data, setData] = useState({});
   const [error, setError] = useState({});
   const inputLabel = React.useRef(null);
+  const [exist,setExist]=useState(false)
 
 
   const schema = {
@@ -108,7 +109,6 @@ const Signup = ({setLoading}) => {
       else{
         setLoading(false)
       }
-
   }
 
   const classes = useStyles();  

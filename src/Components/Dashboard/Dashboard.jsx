@@ -100,7 +100,7 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = (props) => {
     const [initials, setInitials] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
     const [value, setValue] = useState(0);
     const [modal,setModal]=useState(false)
@@ -143,14 +143,16 @@ const Dashboard = (props) => {
         .catch(err=>{
             setUserInfo(err)
         })
-
    }
 
   const getUserChains =() => {
       GetAllChains()
       .then((res)=>{
-          console.log(res)
-        setUserChains(res)
+         setUserChains(res)
+         setLoading(false)
+      })
+      .catch(err=>{
+        setLoading(false)
       })
   };
 
