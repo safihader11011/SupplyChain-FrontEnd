@@ -256,6 +256,16 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
     // }
 
     const handleCreate=async()=>{
+      if(!expiryDate){
+            var textValue="";
+            const date = new Date().getUTCDate().toString()
+            const month = (new Date().getUTCMonth()+1).toString()
+            const year =  new Date().getUTCFullYear().toString()
+            textValue =  date + '/' + month + '/' + year;
+            const temp=data
+            temp['expiryDate']=textValue
+            setExpiryDate(new Date())
+      }
       setLoading(true)
       const temp=Object.keys(data)
       const user=await GetUser()

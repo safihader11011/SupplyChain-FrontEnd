@@ -42,7 +42,7 @@ export const GetUser=()=>{
             }
         })
         .then((res)=>{
-            //console.log(res)
+            console.log(res)
             resolve(res.data)
         })
         .catch((res)=>{

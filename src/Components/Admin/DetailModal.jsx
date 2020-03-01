@@ -2,6 +2,7 @@ import React,{useState} from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { Grid, Typography,Divider } from "@material-ui/core";
+import ButtonComponent from '../common/Button'
 
 function getModalStyle() {
     //const top = 50;
@@ -182,6 +183,9 @@ const DetailModal = ({setOpen,data}) => {
               })
           }
           </div>
+          <Grid container justify="center">
+            <ButtonComponent variant="contained" color="secondary" onClick={()=>handleClose()}>Close</ButtonComponent>
+          </Grid>
          </Grid> 
       </Modal>
      );

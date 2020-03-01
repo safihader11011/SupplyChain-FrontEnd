@@ -9,6 +9,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import ButtonComponent from '../common/Button'
+import {FaRegCheckCircle} from 'react-icons/fa'
+import {GiCancel} from 'react-icons/gi'
 
 const useStyles = makeStyles({
   table: {
@@ -36,6 +38,10 @@ export default function ChainTable({setopen,rows,setRow}) {
     setRow(row)
   }
 
+  const deleteChain=(id)=>{
+    console.log(id)
+  }
+
   return (
     <TableContainer className={classes.tablestyle} component={Paper}>
       {
@@ -48,7 +54,9 @@ export default function ChainTable({setopen,rows,setRow}) {
           <TableRow>
             <TableCell align="center" className={classes.head}>Chain Name</TableCell>
             <TableCell align="center" className={classes.head}>Time Stamp</TableCell>
+            <TableCell align="center" className={classes.head}>Status</TableCell>
             <TableCell align="center" className={classes.head}>Chain Infomation</TableCell>
+            <TableCell align="center" className={classes.head}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -59,6 +67,8 @@ export default function ChainTable({setopen,rows,setRow}) {
                 {row.name}
               </TableCell>
               <TableCell align="center">{row.timestamp}</TableCell>
+              <TableCell align="center">{row.verified===false?<Typography color="error">Not Verified</Typography>:<Typography color="primary">Verified</Typography>}</TableCell>
+              <TableCell align="center"><ButtonComponent variant="outlined" color="secondary" onClick={()=>deleteChain(row._id)}>Delete</ButtonComponent></TableCell>
               <TableCell align="center"><ButtonComponent color="primary" variant="contained" onClick={()=>handleClick(row)}>Details</ButtonComponent></TableCell>
             </TableRow>
           ))}

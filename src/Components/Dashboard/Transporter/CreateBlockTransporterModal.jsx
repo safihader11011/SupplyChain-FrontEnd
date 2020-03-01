@@ -135,6 +135,7 @@ const CreateBlockTransporterModal = ({blockchains,setOpen }) => {
 
     const handleClose = () => {
         setOpen(false);
+        window.location.reload()
     };
 
     const handleChange = (event, func)=> {

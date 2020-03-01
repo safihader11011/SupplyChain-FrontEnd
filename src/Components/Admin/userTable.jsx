@@ -9,6 +9,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import ButtonComponent from '../common/Button'
+import {FaRegCheckCircle} from 'react-icons/fa'
+import {GiCancel} from 'react-icons/gi'
+
 
 const useStyles = makeStyles({
   table: {
@@ -28,12 +31,14 @@ const useStyles = makeStyles({
 });
 
 
-export default function ChainTable({setopen,rows,setRow}) {
+export default function UserTable({setopen,setID,rows}) {
   const classes = useStyles();
 
-  const handleClick=(row)=>{
-    setopen(true)
-    setRow(row)
+  const handleClick=(id)=>{
+      console.log(id)
+      setID(id)
+      setopen(true)
+    
   }
 
   return (
@@ -46,9 +51,11 @@ export default function ChainTable({setopen,rows,setRow}) {
         {console.log(rows)}
         <TableHead className={classes.tableHeader}>
           <TableRow>
-            <TableCell align="center" className={classes.head}>Chain Name</TableCell>
-            <TableCell align="center" className={classes.head}>Time Stamp</TableCell>
-            <TableCell align="center" className={classes.head}>Chain Infomation</TableCell>
+            <TableCell align="center" className={classes.head}>Full Name</TableCell>
+            <TableCell align="center" className={classes.head}>Email</TableCell>
+            <TableCell align="center" className={classes.head}>Contact</TableCell>
+            <TableCell align="center" className={classes.head}>Role</TableCell>
+            <TableCell align="center" className={classes.head}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -58,8 +65,10 @@ export default function ChainTable({setopen,rows,setRow}) {
               <TableCell component="th" align="center" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell align="center">{row.timestamp}</TableCell>
-              <TableCell align="center"><ButtonComponent color="primary" variant="contained" onClick={()=>handleClick(row)}>Details</ButtonComponent></TableCell>
+              <TableCell align="center">{row.email}</TableCell>
+              <TableCell align="center">{row.phone}</TableCell>
+              <TableCell align="center">{row.role}</TableCell>
+              <TableCell align="center"><ButtonComponent color="primary" variant="contained" onClick={()=>handleClick(row._id)}>Details</ButtonComponent></TableCell>
             </TableRow>
           ))}
         </TableBody>

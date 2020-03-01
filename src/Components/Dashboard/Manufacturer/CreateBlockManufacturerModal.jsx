@@ -118,7 +118,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
     const [itemNo,setItemNo]=useState([])
     const [Loading,setLoading]=useState(false)
      
-
+    var arr=[]
     const classes = useStyles();
   
     const inputLabel = React.useRef(null);
@@ -134,6 +134,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
 
     const handleClose = () => {
         setOpen(false);
+        window.location.reload()
     };
 
     const handleChange = (event, func)=> {
@@ -176,23 +177,58 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
       temp[id] = value;
       setData(temp);
       if(id==='items'){
-        if(!data.items){
-          setItemNo([])
-          setMap(false)
-        }
-        else{
-          var temp1=itemNo
-          for(let i=1;i<=data.items;i++){
-            temp1.push(i)
+          const temp1=data.items
+          var arr1=[]
+          for(let i=1;i<=temp1;i++){
+                arr1.push(i)
           }
-          setItemNo(temp1)
+          //console.log(arr1)
+          setItemNo(arr1)
           setMap(true)
+        // if(!data.items){
+        //   setItemNo([])
+        //   setMap(false)
+        // }
+        // else{
+        //   var temp1=itemNo
+        //   for(let i=1;i<=data.items;i++){
+        //     temp1.push(i)
+        //   }
+        //   setItemNo(temp1)
+        //   setMap(true)
+        // }
+      }
+      console.log(data)
+    };
+
+
+    const onChange4 = event => {
+      var ans
+      const { id, value } = event.target;
+      if(arr.length>0){
+        ans=arr.findIndex((element,index)=>{
+            return(element.id===id)
+        })
+        if(ans>=0){
+          arr.splice(ans,1)
+          arr.push({id,value})
+        }
+        else if(ans<0){
+          arr.push({id,value})
         }
       }
-
+      else{
+        arr.push({id,value})
+      }
+      console.log(arr)
+      const temp = data;
+      temp['itemDetails'] = arr;
+      setData(temp);
+      console.log(data)
     };
     
     const onChange1 = event => {
+
       const { name, value } = event.target;
       const temp = data;
       temp[name] = value;
@@ -283,6 +319,26 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
    
 
     const handleCreate=async()=>{
+      if(!expiryDate){
+        var textValue="";
+        const date = new Date().getUTCDate().toString()
+        const month = (new Date().getUTCMonth()+1).toString()
+        const year =  new Date().getUTCFullYear().toString()
+        textValue =  date + '/' + month + '/' + year;
+        const temp=data
+        temp['expiryDate']=textValue
+        setExpiryDate(new Date())
+      }
+      if(!manufacturingDate){
+        var textValue="";
+        const date = new Date().getUTCDate().toString()
+        const month = (new Date().getUTCMonth()+1).toString()
+        const year =  new Date().getUTCFullYear().toString()
+        textValue =  date + '/' + month + '/' + year;
+        const temp=data
+        temp['manufacturingDate']=textValue
+        setmanufacturingDate(new Date())
+      }
       setLoading(true)
       const user=await GetUser()
       var data1={};
@@ -380,7 +436,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
               map && itemNo.map((item,index)=>{
                 return(
                   <div key={index}>
-                    <Input id="quantity" variant="outlined" style={{width:"100%"}} label={`Quantity of Item ${item}`} placeholder={`Quantity of Item ${item}`} onChange={onChange} />
+                    <Input id={`quantity${index+1}`} variant="outlined" style={{width:"100%"}} label={`Quantity of Item ${item}`} placeholder={`Quantity of Item ${item}`} onChange={onChange4} />
                     {error && (error.quantity) && <Error text={error.quantity}/>}
                   </div>   
                 )
@@ -399,7 +455,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
                       margin="normal"
                       id="manufacturingDate"
                       format={'dd/MM/yyyy'}
-                      value={expiryDate}
+                      value={manufacturingDate}
                       label="Manufacturing Date"
                       name="manufacturingDate"
                       onChange={(event)=>onChange2(event,setmanufacturingDate,'manufacturingDate')}

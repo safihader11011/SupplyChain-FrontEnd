@@ -1,37 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Typography, Hidden, Divider,Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-//import Loader from '../common/Loader'
-// import { Logout } from '../Services/Auth-Service';
-// import queryString from 'query-string';
-// import Members from './Components/Members'
-// import OrderDetails from './Components/OrderDetails'
-// import Products from './Components/Products/Products';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
-import PhoneIcon from '@material-ui/icons/Phone';
-import { People, MeetingRoom } from '@material-ui/icons';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import { MeetingRoom } from '@material-ui/icons';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-// import TransporterModal from './common/TranspoterModal'
-// import TransporterTable from './common/TransporterTable'
-// import Availability from './Availability'
-import CreateBlockSupplierModal from './Supplier/CreateBlockSupplierModal'
-import CreateBlockManufacturerModal from './Manufacturer/CreateBlockManufacturerModal'
-import CreateBlockTransporterModal from './Transporter/CreateBlockTransporterModal'
-import CreateBlockRetailerModal from './Retailer/CreateBlockRetailerModal'
-import CreateBlockConsumerModal from './Consumer/CreateBlockConsumerModal'
 import {Logout,GetUser} from '../../Services/Auth-service'
 import {GetBlockchains,GetAllChains} from '../../Services/AddBlocks'
 import Loader from '../common/Loader'
 import ChainTable from './ChainTable'
 import DetailModal from './DetailModal'
-
-// import {GetFleet,GetAvailability,GetShipperInformation} from '../../Services/Transporter-Services'
-// import ShipperInformationTable from '../Dashboard/common/Booking/TransporterBooking'
-// import {GetAllCities} from '../../Services/admin-Services'
-
+import {GetAllUser,GetUserAllChains} from '../../Services/admin-services'
+import UserTable from './userTable'
+import UserChainDetails from './UserChainDetails'
+import {GiBreakingChain} from 'react-icons/gi'
+import {FaRegUser} from 'react-icons/fa'
 
 const useStyles = makeStyles(theme => ({
     pic:{
@@ -61,9 +45,9 @@ const useStyles = makeStyles(theme => ({
     },
     select:{
         paddingLeft:theme.spacing(7),
-        backgroundColor:"#c0c0c0",
-        width:188,
-        color:"white",
+        // backgroundColor:"#c0c0c0",
+        // width:188,
+        color:"#1C86EE",
         paddingTop:theme.spacing(3),
         paddingBottom:theme.spacing(3),
         cursor:"pointer",
@@ -72,6 +56,7 @@ const useStyles = makeStyles(theme => ({
     notSelect:{
         paddingLeft:theme.spacing(7),
         width:188,
+        color:"white",
         paddingTop:theme.spacing(3),
         paddingBottom:theme.spacing(3),
         cursor:"pointer",
@@ -80,7 +65,7 @@ const useStyles = makeStyles(theme => ({
     font:{
         fontWeight:200,
         fontSize:17,
-        color:"white"
+        //color:"white"
     },
     root: {
         flexGrow: 1,
@@ -98,7 +83,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const Dashboard = (props) => {
+const AdminDashboard = (props) => {
     const [initials, setInitials] = useState(false);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
@@ -113,30 +98,33 @@ const Dashboard = (props) => {
     const [userInfo,setUserInfo]=useState()
     const [details,setDetails]=useState(false)
     const [row,setRow]=useState()
-    
+    const [ID,setID]=useState()
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
         console.log(newValue)
     };
 
-    const {role}=props.match.params
+    //const {role}=props.match.params
 
     useEffect(()=>{
         if(!chain){
             getchain()
-            if(!userChains){
-                getUserChains()
+            // if(!userChains){
+            //     getUserChains()
                 if(!userInfo){
                     getUserInfo()
                 }
-            }
+            // }
+        }
+        if(ID){
+            getUserChains()
         }
 
-   },[chain])
+   },[chain,ID])
 
    const getUserInfo=async()=>{
-        GetUser()
+        GetAllUser()
         .then((res)=>{
             setUserInfo(res)
         })
@@ -146,7 +134,7 @@ const Dashboard = (props) => {
    }
 
   const getUserChains =() => {
-      GetAllChains()
+      GetUserAllChains(ID)
       .then((res)=>{
          setUserChains(res)
          setLoading(false)
@@ -158,7 +146,9 @@ const Dashboard = (props) => {
 
    const getchain=async()=>{
        const res=await GetBlockchains();
+       console.log(res)
        setChain(res)
+       setLoading(false)
    }
 
     const handleLogout = event => {
@@ -178,25 +168,27 @@ const Dashboard = (props) => {
                         <Hidden smDown>
                             <Grid style={{paddingTop:"5px",height:"100vh",background:"#2a2a2a",position:"sticky",top:0,left:0}} container direction="column" alignItems="flex-start" justify="flex-start" sm={2}>
                                 
-                                <div style={{paddingLeft:35,marginBottom:10}}>
+                                <div style={{paddingLeft:35,marginBottom:25}}>
                                     <img className={classes.pic} src={require(`../assets/Avatar.png`)} height="150" width="150"/>
-                                    <Typography color="textSecondary" style={{fontSize:18.5,textAlign:"center",color:"white"}}>{userInfo? userInfo.name:"User"}</Typography>
+                                    <Typography color="textSecondary" style={{fontSize:18.5,textAlign:"center",color:"white"}}>Admin</Typography>
                                 </div>
-                                    <span onClick={()=>{setValue(0)}} className={value=="profile"? classes.select:classes.notSelect}>
-                                        {/* <img className={classes.paddR} src={require(`../assets/icon.jpg`)} height="20" width="auto"/> */}
-                                        {/* <Typography className={classes.font} variant="body1" component="span">Blockchain</Typography> */}
-                                    </span>                              
+                                <div onClick={()=>{setValue(0)}} className={value===0? classes.select:classes.notSelect}>
+                                    <Typography className={classes.font} variant="body1" component="span">Blockchain</Typography>
+                                </div>                              
+                                <div onClick={()=>{setValue(1)}} className={value===1? classes.select:classes.notSelect}>
+                                    <Typography className={classes.font} variant="body1" component="span">Users</Typography>
+                                </div>                              
                                 <Button style={{position:"fixed",bottom:"10px",left:"30px",width:150}}  onClick={()=>handleLogout()} variant="outlined" color="primary">Logout</Button>
                             </Grid>
                         </Hidden>
                         
                         <Grid container style={{height:"100%"}} direction="row" xs={12} sm={10}>
                             <Grid container justify="flex-end" alignItems="center">
-                                <Grid container justify="flex-start"  xs={6}>
+                                <Grid container justify="center" >
                                     <img className={classes.padd} src={require(`../assets/icon.jpeg`)} height="70" width="auto"/>         
                                 </Grid>
                                 <Grid container justify="flex-end" xs={6}>
-                                    {value===0 && <Button onClick={()=>setModal1(true)} className={classes.Top} color="primary" variant="contained">Create Block</Button>}
+                                    {/* {value===0 && <Button onClick={()=>setModal1(true)} className={classes.Top} color="primary" variant="contained">Create Block</Button>} */}
                                 </Grid>
                                 {/* {value===1 && <Button onClick={()=>setModal(true)} className={classes.Top} color="primary" variant="contained">Create New Vehicle</Button>}
                                 {value===2 && ""} */}
@@ -206,12 +198,23 @@ const Dashboard = (props) => {
                                 {/* {value===1 && data ?  <TransporterTable rows={data} />:data===null? <Loader/>: ""}
                                 {value===0 && avail? <Availability rows={avail}/>:avail===null?<Loader/>:"" }
                                 {value===2 && book? <ShipperInformationTable rows={book}/>:book===null?<Loader/>:"" } */}
-                                <Typography variant="h5" className={classes.chain} color="primary">BLOCKCHAINS</Typography>
                                 {
-                                    userChains && <ChainTable setopen={setDetails} setRow={setRow} rows={userChains}/>   
+                                  value===0 && 
+                                    <Grid container>
+                                        <Typography variant="h5" className={classes.chain} color="primary">BLOCKCHAINS</Typography>
+                                        {chain && <ChainTable setopen={setDetails} setRow={setRow} rows={chain}/>}
+                                    </Grid>
+                                }
+                                {
+                                    value===1 && 
+                                    <Grid container>
+                                         <Typography variant="h5" className={classes.chain} color="primary">Users</Typography>
+                                         {userInfo && <UserTable setopen={setModal} setID={setID} rows={userInfo}/>}
+                                    </Grid>
                                 }
                             </Grid>
                             {details && <DetailModal data={row} setOpen={setDetails}/>}
+                            {modal && <UserChainDetails data={userChains} setData={setUserChains} setOpen={setModal}/>}
                         </Grid>
                         <Hidden smUp>
                             <Paper square className={classes.root}>
@@ -223,14 +226,14 @@ const Dashboard = (props) => {
                                     textColor="secondary"
                                     aria-label="icon label tabs example"
                                 >
-                                    <Tab icon={<PersonPinIcon />} label="Check Availability" />
-                                    <Tab icon={<MeetingRoom />} label="Fleet Management" />
+                                    <Tab icon={<GiBreakingChain style={{fontSize:20}}/>} label="Blockchains" />
+                                    <Tab icon={<FaRegUser style={{fontSize:20}}/>} label="Users" />
                                 </Tabs>
                             </Paper>
                         </Hidden>
 
                     </Grid>
-                    {modal1 && role==='supplier'? <CreateBlockSupplierModal blockchains={chain} setOpen={setModal1}/>
+                    {/* {modal1 && role==='supplier'? <CreateBlockSupplierModal blockchains={chain} setOpen={setModal1}/>
                     :
                     modal1 && role==='manufacturer'? <CreateBlockManufacturerModal blockchains={chain} setOpen={setModal1}/>
                             :
@@ -241,10 +244,10 @@ const Dashboard = (props) => {
                     modal1 && role==="consumer"?<CreateBlockConsumerModal blockchains={chain} setOpen={setModal1}/>
                     :
                     ""
-                    }
+                    } */}
                 </div> 
             }
         </div>
     );
 }
-export default Dashboard;
+export default AdminDashboard;

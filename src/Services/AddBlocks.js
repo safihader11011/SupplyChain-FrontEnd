@@ -18,14 +18,26 @@ export const AddBlockOther=(data,id)=>{
 
 export const GetBlockchains=()=>{
     return new Promise((resolve,reject)=>{
-            axios.get(`${endpoint}/api/supplychain/fetchAll`)
-            .then((res)=>{
-                resolve(res.data.data)
-            })
-            .catch(err=>{
-                console.log(err)
-                resolve([])
-            })
+        axios.get(`${endpoint}/api/supplychain/fetchAll`)
+        .then((res)=>{
+            resolve(res.data.data)
+        })
+        .catch(err=>{
+            console.log(err)
+            resolve([])
+        })
+        // GetUser().
+        //     then((user)=>{
+        //         axios.get(`${endpoint}/api/supplychain/fetchAll/${user._id}/${user.role}`)
+        //         .then((res)=>{
+        //             resolve(res.data.data)
+        //         })
+        //         .catch(err=>{
+        //             console.log(err)
+        //             resolve([])
+        //         })
+        //     })
+        //     .catch(er=>resolve([]))
     })
 }
 
