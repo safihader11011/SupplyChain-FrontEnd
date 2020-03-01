@@ -27,6 +27,7 @@ import {GetBlockchains,GetAllChains} from '../../Services/AddBlocks'
 import Loader from '../common/Loader'
 import ChainTable from './ChainTable'
 import DetailModal from './DetailModal'
+import {CurrentUserID} from '../../Services/Auth-service'
 
 // import {GetFleet,GetAvailability,GetShipperInformation} from '../../Services/Transporter-Services'
 // import ShipperInformationTable from '../Dashboard/common/Booking/TransporterBooking'
@@ -120,7 +121,7 @@ const Dashboard = (props) => {
         console.log(newValue)
     };
 
-    const {role}=props.match.params
+    const role=CurrentUserID()
 
     useEffect(()=>{
         if(!chain){

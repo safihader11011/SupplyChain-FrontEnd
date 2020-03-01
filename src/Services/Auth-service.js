@@ -1,4 +1,6 @@
 import axios from 'axios'
+import JWTDecode from 'jwt-decode';
+
 
 const endpoint='https://supply-chain-tracking-system.herokuapp.com'
 export const SignUP=({name,email,password,role,phone})=>{
@@ -50,4 +52,14 @@ export const GetUser=()=>{
             resolve(false)
         })
     })
+}
+
+export const CurrentUserID = () => {
+    const data = localStorage.getItem('Auth-Token');
+    try {
+        return JWTDecode(data).role.toLowerCase();
+    }
+    catch(ex){
+        return null
+    }
 }
