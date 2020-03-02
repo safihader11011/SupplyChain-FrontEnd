@@ -85,6 +85,7 @@ function getModalStyle() {
     },
     formControl: {
         margin: theme.spacing(1),
+        marginLeft:0,
         width:"100%"
       },
       selectEmpty: {
@@ -262,6 +263,7 @@ const CreateBlockRetailerModal = ({blockchains,setOpen }) => {
           container
           xs={12}
           direction="row"
+          justify="center"
           style={modalStyle}
           className={classes.paper}
         >

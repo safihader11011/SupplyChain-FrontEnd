@@ -5,9 +5,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles(theme => ({
-    // input:{
-    //     minWidth:300
-    // }
+    input:{
+        [theme.breakpoints.down("sm")]: {
+            maxWidth:"100%"
+        }
+    }
 }));
 
 

@@ -84,6 +84,7 @@ function getModalStyle() {
     },
     formControl: {
         margin: theme.spacing(1),
+        marginLeft:0,
         width:"100%"
       },
       selectEmpty: {
@@ -382,6 +383,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
           container
           xs={12}
           direction="row"
+          justify="center"
           style={modalStyle}
           className={classes.paper}
         >
@@ -399,7 +401,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
                 </Grid>
               </Grid>
             :
-            <div>
+            <Grid container justify="center">
               
             <Grid container justify="center">
              <Typography variant="h4" style={{textAlign:"center"}} className={classes.bold}>Add Manufacturing Informaion</Typography>
@@ -500,7 +502,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
                 <ButtonComponent variant="contained" color="primary" styles={{marginTop:15,width:120}} onClick={()=>handleCreate()}>Create</ButtonComponent>
                 <ButtonComponent variant="contained" color="secondary" onClick={()=>setOpen(false)} styles={{marginTop:15,width:120}}>Cancel</ButtonComponent>
             </Grid>
-            </div>
+            </Grid>
             }
          </Grid> 
       </Modal>

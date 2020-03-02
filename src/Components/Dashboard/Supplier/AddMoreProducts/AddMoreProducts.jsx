@@ -100,8 +100,16 @@ function getModalStyle() {
         borderRadius:theme.spacing(2),
         border:"2px solid lightgrey",
         padding:theme.spacing(4,4,6,4),
+        [theme.breakpoints.down("sm")]: {
+          padding:theme.spacing(2,2,3,2)
+        },
         marginBottom:theme.spacing(2)
 
+      },
+      date:{
+        [theme.breakpoints.down("sm")]: {
+          maxWidth:"100%"
+        }
       }
   }));
   
@@ -279,8 +287,8 @@ const AddMoreProducts = ({data,setData,onChange2,onChange,setOpen,index}) => {
                 </Grid>
               </Grid>
             :
-            <div>
-            <Grid container alignItems="center" justify="center">
+            <Grid container direction="column" alignItems="center">
+            <Grid container  alignItems="center" justify="center">
               <Typography variant="h6">Item Information</Typography>
             </Grid>
             <Input id={`price${index}`} variant="outlined" style={{width:"100%"}} label="Price" placeholder="Price" onChange={onChange} />
@@ -296,6 +304,7 @@ const AddMoreProducts = ({data,setData,onChange2,onChange,setOpen,index}) => {
                 <Grid className={classes.marL} container alignItems="center" xs={12}>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
+                      className={classes.date}
                       style={{width:"100%"}}
                       margin="normal"
                       id="expiryDate"
@@ -314,7 +323,7 @@ const AddMoreProducts = ({data,setData,onChange2,onChange,setOpen,index}) => {
                 </Grid>
             </Grid>
         
-            </div>
+            </Grid>
             }
          </Grid> 
      );

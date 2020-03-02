@@ -86,6 +86,7 @@ function getModalStyle() {
     },
     formControl: {
         margin: theme.spacing(1),
+        marginLeft:0,
         width:"100%"
       },
       selectEmpty: {
@@ -117,7 +118,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
     const [created,setCreated]=useState(false)
     const [Loading,setLoading]=useState(false)
      
-
+    var arr=[]
     const classes = useStyles();
   
     const inputLabel = React.useRef(null);
@@ -161,8 +162,9 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
       const temp = data;
       temp[id] = value;
       setData(temp);
-
+      console.log(data)
     };
+
     
     const onChange1 = event => {
       
@@ -182,7 +184,6 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
         const year =  event.getUTCFullYear().toString()
         textValue = date + '/' + month + '/' + year;
       }
-      
       console.log(textValue)
       name(event)
       const time = textValue
@@ -198,74 +199,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
       setCount(temp)
     }
 
-    // const handleCreate = event => {
-    //   if(!startingDate){
-    //     var textValue="";
-    //     const date = new Date().getUTCDate().toString()
-    //     const month = (new Date().getUTCMonth()+1).toString()
-    //     const year =  new Date().getUTCFullYear().toString()
-    //     textValue =  date + '/' + month + '/' + year;
-    //     const temp=data
-    //     temp['startingDate']=textValue
-    //     setStartingDate(new Date())
-    //   }
-    //   if(!endingDate){
-    //     var textValue="";
-    //     const date = new Date().getUTCDate().toString()
-    //     const month = (new Date().getUTCMonth()+1).toString()
-    //     const year =  new Date().getUTCFullYear().toString()
-    //     textValue =  date + '/' + month + '/' + year;
-    //     const temp=data
-    //     temp['endingDate']=textValue
-    //     setEndingDate(new Date())
-
-    //   }
-    //   if(!startingTime){
-    //     var textValue="";
-    //     const hours = new Date().getHours().toString().padStart(2, "0");
-    //     const minutes = new Date().getMinutes().toString().padStart(2, "0")
-    //     textValue = hours + ':' + minutes;
-    //     const temp=data
-    //     temp['startingTime']=textValue
-    //     setStartingTime(new Date())
-    //   }
-    //   if(!endingTime){
-    //     var textValue="";
-    //     const hours = new Date().getHours().toString().padStart(2, "0");
-    //     const minutes = new Date().getMinutes().toString().padStart(2, "0")
-    //     textValue = hours + ':' + minutes;
-    //     const temp=data
-    //     temp['endingTime']=textValue
-    //     setEndingTime(new Date())
-    //   }
-    //   console.log(data)
-    //     setError(validate())
-      
-    //     // const temp=data;
-    //     // var date=new Date()
-    //     // temp['Timestamp'] = date.toLocaleString();
-    //     // setData(temp);
-
-    //    // const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
-       
-        
-
-    // }
-    // const handleClick=()=>{
-    //   setError(validate())
-    // }
-
     const handleCreate=async()=>{
-      if(!expiryDate){
-            var textValue="";
-            const date = new Date().getUTCDate().toString()
-            const month = (new Date().getUTCMonth()+1).toString()
-            const year =  new Date().getUTCFullYear().toString()
-            textValue =  date + '/' + month + '/' + year;
-            const temp=data
-            temp['expiryDate']=textValue
-            setExpiryDate(new Date())
-      }
       setLoading(true)
       const temp=Object.keys(data)
       const user=await GetUser()
@@ -324,6 +258,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
           xs={12}
           direction="row"
           style={modalStyle}
+          justify="center"
           className={classes.paper}
         >
           {
@@ -348,6 +283,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
             <Input id="blockchain" variant="outlined" style={{width:"100%"}} label="Blockchain Name" placeholder="Blockchain Name" onChange={onChange} />
             {error && (error.blockchain) && <Error text={error.blockchain}/>}
 
+            <div style={{width:"100%"}}>
             {
               count.map((item,index)=>{
                 return(
@@ -355,6 +291,7 @@ const CreateBlockSupplierModal = ({cities,setOpen }) => {
                 )
               })
             }
+            </div>
             <Grid container justify="center">
                 <ButtonComponent variant="outlined" color="primary" styles={{marginTop:15}} onClick={()=>setCount([...count,1])}>Add More Items</ButtonComponent>
             </Grid>
