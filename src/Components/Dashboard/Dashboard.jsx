@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Typography, Hidden, Divider,Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-//import Loader from '../common/Loader'
-// import { Logout } from '../Services/Auth-Service';
-// import queryString from 'query-string';
-// import Members from './Components/Members'
-// import OrderDetails from './Components/OrderDetails'
-// import Products from './Components/Products/Products';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
@@ -14,9 +8,6 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import { People, MeetingRoom } from '@material-ui/icons';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-// import TransporterModal from './common/TranspoterModal'
-// import TransporterTable from './common/TransporterTable'
-// import Availability from './Availability'
 import CreateBlockSupplierModal from './Supplier/CreateBlockSupplierModal'
 import CreateBlockManufacturerModal from './Manufacturer/CreateBlockManufacturerModal'
 import CreateBlockTransporterModal from './Transporter/CreateBlockTransporterModal'
@@ -28,10 +19,8 @@ import Loader from '../common/Loader'
 import ChainTable from './ChainTable'
 import DetailModal from './DetailModal'
 import {CurrentUserID} from '../../Services/Auth-service'
-
-// import {GetFleet,GetAvailability,GetShipperInformation} from '../../Services/Transporter-Services'
-// import ShipperInformationTable from '../Dashboard/common/Booking/TransporterBooking'
-// import {GetAllCities} from '../../Services/admin-Services'
+import {GiBreakingChain} from 'react-icons/gi'
+import ProfileMobile from './ProfileMobile'
 
 
 const useStyles = makeStyles(theme => ({
@@ -111,7 +100,7 @@ const Dashboard = (props) => {
     const [cities,setCities]=useState(null)
     const [chain,setChain]=useState();
     const [userChains,setUserChains]=useState()
-    const [userInfo,setUserInfo]=useState()
+    const [userInfo,setUserInfo]=useState(null)
     const [details,setDetails]=useState(false)
     const [row,setRow]=useState()
     
@@ -139,6 +128,7 @@ const Dashboard = (props) => {
    const getUserInfo=async()=>{
         GetUser()
         .then((res)=>{
+            console.log(res)
             setUserInfo(res)
         })
         .catch(err=>{
@@ -202,15 +192,22 @@ const Dashboard = (props) => {
                                 {/* {value===1 && <Button onClick={()=>setModal(true)} className={classes.Top} color="primary" variant="contained">Create New Vehicle</Button>}
                                 {value===2 && ""} */}
                                 <Divider style={{width:"100%"}}/>
-                            </Grid>
+                            </Grid> 
                             <Grid container alignItems="flex-start" justify="center">
-                                {/* {value===1 && data ?  <TransporterTable rows={data} />:data===null? <Loader/>: ""}
-                                {value===0 && avail? <Availability rows={avail}/>:avail===null?<Loader/>:"" }
-                                {value===2 && book? <ShipperInformationTable rows={book}/>:book===null?<Loader/>:"" } */}
-                                <Typography variant="h5" className={classes.chain} color="primary">BLOCKCHAINS</Typography>
                                 {
-                                    userChains && <ChainTable setopen={setDetails} setRow={setRow} rows={userChains}/>   
+                                    value==0 &&
+                                    <Grid container>
+                                    <Typography variant="h5" className={classes.chain} color="primary">BLOCKCHAINS</Typography>
+                                    {
+                                        userChains && <ChainTable setopen={setDetails} setRow={setRow} rows={userChains}/>   
+                                    }
+                                    </Grid>
                                 }
+                                {value===1 && <div>{userInfo===null?<Loader/>:<ProfileMobile handleLogout={handleLogout} data={userInfo}/>}</div>}
+                                {/* {value===1 && userInfo!==null && <ProfileMobile handleLogout={handleLogout} data={userInfo}/>} */}
+                                {/*{value===0 && avail? <Availability rows={avail}/>:avail===null?<Loader/>:"" }
+                                {value===2 && book? <ShipperInformationTable rows={book}/>:book===null?<Loader/>:"" } */}
+                                
                             </Grid>
                             {details && <DetailModal data={row} setOpen={setDetails}/>}
                         </Grid>
@@ -220,12 +217,12 @@ const Dashboard = (props) => {
                                     value={value}
                                     onChange={handleChange}
                                     variant="fullWidth"
-                                    indicatorColor="primary"
-                                    textColor="secondary"
+                                    indicatorColor="secondary"
+                                    textColor="primary"
                                     aria-label="icon label tabs example"
                                 >
-                                    <Tab icon={<PersonPinIcon />} label="Check Availability" />
-                                    <Tab icon={<MeetingRoom />} label="Fleet Management" />
+                                    <Tab  icon={<GiBreakingChain style={{fontSize:20}}/>} label="Blockchains" />
+                                    <Tab icon={<PersonPinIcon style={{fontSize:20}}/>} label="Profile" />
                                 </Tabs>
                             </Paper>
                         </Hidden>
