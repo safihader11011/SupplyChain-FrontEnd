@@ -401,7 +401,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
                 </Grid>
               </Grid>
             :
-            <Grid container justify="center">
+            <div>
               
             <Grid container justify="center">
              <Typography variant="h4" style={{textAlign:"center"}} className={classes.bold}>Add Manufacturing Informaion</Typography>
@@ -502,7 +502,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
                 <ButtonComponent variant="contained" color="primary" styles={{marginTop:15,width:120}} onClick={()=>handleCreate()}>Create</ButtonComponent>
                 <ButtonComponent variant="contained" color="secondary" onClick={()=>setOpen(false)} styles={{marginTop:15,width:120}}>Cancel</ButtonComponent>
             </Grid>
-            </Grid>
+            </div>
             }
          </Grid> 
       </Modal>

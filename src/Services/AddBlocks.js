@@ -5,7 +5,12 @@ const endpoint='https://supply-chain-tracking-system.herokuapp.com'
 
 export const AddBlockOther=(data,id)=>{
     return new Promise((resolve,reject)=>{
-        axios.post(`${endpoint}/api/supplychain/add/${id}`,{name:data.name,UserId:data.UserId,role:data.role,data:data.data})
+        axios({
+            method:'post',
+            url:`${endpoint}/api/supplychain/add/${id}`,
+            data:{name:data.name,UserId:data.UserId,role:data.role,data:data.data},
+            headers:{auth:localStorage.getItem('Auth-Token')}
+        })
         .then((res)=>{
             resolve(true)
         })
@@ -18,7 +23,11 @@ export const AddBlockOther=(data,id)=>{
 
 export const GetBlockchains=()=>{
     return new Promise((resolve,reject)=>{
-        axios.get(`${endpoint}/api/supplychain/fetchAll`)
+        axios({
+            method:'get',
+            url:`${endpoint}/api/supplychain/fetchAll`,
+            headers:{auth:localStorage.getItem('Auth-Token')}
+        })
         .then((res)=>{
             resolve(res.data.data)
         })

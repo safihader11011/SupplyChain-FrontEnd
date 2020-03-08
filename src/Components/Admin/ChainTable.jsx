@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import ButtonComponent from '../common/Button'
 import {FaRegCheckCircle} from 'react-icons/fa'
 import {GiCancel} from 'react-icons/gi'
+import {DeleteBlockChain} from '../../Services/admin-services'
 
 const useStyles = makeStyles({
   table: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles({
 });
 
 
-export default function ChainTable({setopen,rows,setRow}) {
+export default function ChainTable({setopen,setDeleteChain,rows,setRow}) {
   const classes = useStyles();
 
   const handleClick=(row)=>{
@@ -38,8 +39,11 @@ export default function ChainTable({setopen,rows,setRow}) {
     setRow(row)
   }
 
-  const deleteChain=(id)=>{
-    console.log(id)
+  const deleteChain=async(id)=>{
+     const res=await DeleteBlockChain(id)
+     if(res){
+       setDeleteChain(true)
+     }
   }
 
   return (

@@ -11,11 +11,12 @@ import {GetBlockchains,GetAllChains} from '../../Services/AddBlocks'
 import Loader from '../common/Loader'
 import ChainTable from './ChainTable'
 import DetailModal from './DetailModal'
-import {GetAllUser,GetUserAllChains} from '../../Services/admin-services'
+import {GetAllUser,GetUserAllChains,DeleteBlockChain} from '../../Services/admin-services'
 import UserTable from './userTable'
 import UserChainDetails from './UserChainDetails'
 import {GiBreakingChain} from 'react-icons/gi'
 import {FaRegUser} from 'react-icons/fa'
+import ProfileMobile from './ProfileMobile'
 
 const useStyles = makeStyles(theme => ({
     pic:{
@@ -99,6 +100,9 @@ const AdminDashboard = (props) => {
     const [details,setDetails]=useState(false)
     const [row,setRow]=useState()
     const [ID,setID]=useState()
+    const [user,setUser]=useState()
+    const [deleteChain,setDeleteChain]=useState(false)
+    const [init,setInit]=useState(false)
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -110,18 +114,33 @@ const AdminDashboard = (props) => {
     useEffect(()=>{
         if(!chain){
             getchain()
-            // if(!userChains){
-            //     getUserChains()
+            if(!user){
+                getUser()
                 if(!userInfo){
                     getUserInfo()
                 }
-            // }
+            }
         }
         if(ID){
             getUserChains()
         }
+        if(deleteChain && !init){
+            getchain()
+            setInit(true)
+        }
 
-   },[chain,ID])
+   },[chain,ID,deleteChain])
+
+   const getUser=async()=>{
+    GetUser()
+    .then((res)=>{
+        console.log(res)
+        setUser(res)
+    })
+    .catch(err=>{
+        setUser(err)
+    })
+}
 
    const getUserInfo=async()=>{
         GetAllUser()
@@ -150,6 +169,8 @@ const AdminDashboard = (props) => {
        setChain(res)
        setLoading(false)
    }
+
+
 
     const handleLogout = event => {
         setLoading(true);
@@ -202,7 +223,7 @@ const AdminDashboard = (props) => {
                                   value===0 && 
                                     <Grid container>
                                         <Typography variant="h5" className={classes.chain} color="primary">BLOCKCHAINS</Typography>
-                                        {chain && <ChainTable setopen={setDetails} setRow={setRow} rows={chain}/>}
+                                        {chain && <ChainTable setopen={setDetails} setDeleteChain={setDeleteChain} setRow={setRow} rows={chain}/>}
                                     </Grid>
                                 }
                                 {
@@ -212,6 +233,8 @@ const AdminDashboard = (props) => {
                                          {userInfo && <UserTable setopen={setModal} setID={setID} rows={userInfo}/>}
                                     </Grid>
                                 }
+                                {value===2 && <div>{userInfo===null?<Loader/>:<ProfileMobile handleLogout={handleLogout} data={user}/>}</div>}
+                                
                             </Grid>
                             {details && <DetailModal data={row} setOpen={setDetails}/>}
                             {modal && <UserChainDetails data={userChains} setData={setUserChains} setOpen={setModal}/>}
@@ -228,6 +251,7 @@ const AdminDashboard = (props) => {
                                 >
                                     <Tab icon={<GiBreakingChain style={{fontSize:20}}/>} label="Blockchains" />
                                     <Tab icon={<FaRegUser style={{fontSize:20}}/>} label="Users" />
+                                    <Tab icon={<PersonPinIcon style={{fontSize:20}}/>} label="Profile" />
                                 </Tabs>
                             </Paper>
                         </Hidden>

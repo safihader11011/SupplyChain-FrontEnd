@@ -4,7 +4,11 @@ const endpoint='https://supply-chain-tracking-system.herokuapp.com'
 
 export const GetBlockchains=()=>{
     return new Promise((resolve,reject)=>{
-        axios.get(`${endpoint}/admin/verifyBlockChain`)
+        axios({
+            method:'get',
+            url:`${endpoint}/admin/verifyBlockChain`,
+            headers:{auth:localStorage.getItem('Auth-Token')}
+        })
         .then((res)=>{
             resolve(res)
             //resolve(res.data.data)
@@ -15,6 +19,7 @@ export const GetBlockchains=()=>{
         })
     })
 }
+
 export const GetAllUser=()=>{
     return new Promise((resolve,reject)=>{
         axios.get(`${endpoint}/admin/fetchuser`)
@@ -43,6 +48,18 @@ export const GetUserAllChains=(id)=>{
         .catch(err=>{
             console.log([])
             resolve([])
+        })
+    })
+}
+
+export const DeleteBlockChain=(id)=>{
+    return new Promise((resolve,reject)=>{
+        axios.delete(`${endpoint}/admin/deleteBlockChain/${id}`)
+        .then(res=>{
+            resolve(true)
+        })
+        .catch(er=>{
+            resolve(true)
         })
     })
 }
