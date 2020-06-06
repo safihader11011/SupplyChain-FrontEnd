@@ -404,7 +404,7 @@ const CreateBlockManufacturerModal = ({blockchains,setOpen }) => {
             <div>
               
             <Grid container justify="center">
-             <Typography variant="h4" style={{textAlign:"center"}} className={classes.bold}>Add Manufacturing Informaion</Typography>
+             <Typography variant="h4" style={{textAlign:"center"}} className={classes.bold}>Add Manufacturing Information</Typography>
             </Grid>
 
             <FormControl variant="outlined" className={classes.formControl}>

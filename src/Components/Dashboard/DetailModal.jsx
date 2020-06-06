@@ -159,7 +159,7 @@ const DetailModal = ({setOpen,data}) => {
                                             {prod.retailers && <Typography component="span" className={classes.bld}>Number of Retailers : <Typography component="span">{prod.retailers}</Typography><br/></Typography>}
                                             {prod.cost && <Typography component="span" className={classes.bld}>Transportation Cost : <Typography component="span">{prod.cost}</Typography><br/></Typography>}
                                             {prod.count && <Typography component="span" className={classes.bld}>Count : <Typography component="span">{prod.count}</Typography><br/></Typography>}
-                                            {prod.finalProduct && <Typography component="span" className={classes.bld}>Price of Final Product : <Typography component="span">{prod.finalProduct}</Typography><br/></Typography>}
+                                            {prod.finalProduct && <Typography component="span" className={classes.bld}>Quantity of Final Products : <Typography component="span">{prod.finalProduct}</Typography><br/></Typography>}
                                             {prod.expiryDate && <Typography component="span" className={classes.bld}>Expiry Date : <Typography component="span">{prod.expiryDate}</Typography><br/></Typography>}
                                             {prod.manufacturingDate && <Typography component="span" className={classes.bld}>Manufacturing Date : <Typography component="span">{prod.manufacturingDate}</Typography><br/></Typography>}
                                             {prod.itemDetails && prod.itemDetails.map((item,index)=>{
